@@ -59,9 +59,10 @@ export default function Content() {
         <Box
           sx={{
             background: (theme) => theme.palette.grey[200],
-            height: '300px',
+            height: '200px',
+            overflowY: 'hidden',
             borderRadius: '10px',
-            p: 1,
+            p: 2,
           }}
         >
           <Box sx={{ display: 'flex', columnGap: 1 }}>
@@ -74,7 +75,7 @@ export default function Content() {
             </Typography>
           </Box>
 
-          <Box dangerouslySetInnerHTML={{ __html: description }} sx={{ maxHeight: '500px' }}>
+          <Box dangerouslySetInnerHTML={{ __html: description }} sx={{ maxHeight: '200px', overflowY: 'scroll' }}>
           </Box>
         </Box>
       </Grid>
