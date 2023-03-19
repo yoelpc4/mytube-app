@@ -8,4 +8,10 @@ export default class ContentService {
 
     return data
   }
+
+  async findContent(id) {
+    const { data } = await client.get(`contents/${id}`)
+
+    return data
+  }
 }

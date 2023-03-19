@@ -40,7 +40,6 @@ export default function PublishedContentCards() {
     }
   }, [error])
 
-
   return (
     <Grid container spacing={2}>
       {contents.map(content => (

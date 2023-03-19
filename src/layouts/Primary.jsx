@@ -22,7 +22,8 @@ export default function Primary() {
           flexGrow: 1,
           height: '100vh',
           overflow: 'auto',
-          pt: 10
+          pt: 12,
+          px: 4,
         }}
       >
         <Outlet/>
