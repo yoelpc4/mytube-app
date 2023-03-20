@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
 import useContent from '../hooks/useContent.jsx';
 
-export default function PublishedContentCard({content}) {
+export default function TimelineContent({content}) {
   const { createdAt, countViews } = useContent(content)
 
   return (
@@ -13,12 +13,11 @@ export default function PublishedContentCard({content}) {
       <Box>
         <video
           title={content.title}
+          src={content.videoUrl}
           poster={content.thumbnailUrl}
           width="100%"
           style={{borderRadius: '10px'}}
         >
-          <source src={content.videoUrl} type="video/mp4"/>
-          Your browser does not support the video tag.
         </video>
 
         <Box sx={{display: 'flex', mt: '3px'}}>

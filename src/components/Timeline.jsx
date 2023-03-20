@@ -2,10 +2,10 @@ import { useEffect, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import Grid from '@mui/material/Unstable_Grid2'
 import useGetPublishedContents from '../hooks/useGetPublishedContents.jsx';
-import PublishedContentCard from './PublishedContentCard.jsx';
+import TimelineContent from './TimelineContent.jsx';
 import { openAlert } from '../store/alert.js';
 
-export default function PublishedContentCards() {
+export default function Timeline() {
   const dispatch = useDispatch()
 
   const {
@@ -44,7 +44,7 @@ export default function PublishedContentCards() {
     <Grid container spacing={2}>
       {contents.map(content => (
         <Grid key={content.id} sm={12} md={6} lg={4} xl={3}>
-          <PublishedContentCard content={content}/>
+          <TimelineContent content={content}/>
         </Grid>
       ))}
     </Grid>

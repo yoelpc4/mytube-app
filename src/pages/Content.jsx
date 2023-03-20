@@ -8,6 +8,7 @@ import Avatar from '@mui/material/Avatar';
 import useFindContent from '../hooks/useFindContent.jsx';
 import { openAlert } from '../store/alert.js';
 import useContent from '../hooks/useContent.jsx';
+import RelatedContent from '../components/RelatedContent.jsx';
 
 export default function Content() {
   const dispatch = useDispatch()
@@ -80,8 +81,10 @@ export default function Content() {
         </Box>
       </Grid>
 
-      <Grid md={12} lg={4}>
-
+      <Grid md={12} lg={4} sx={{ display: 'flex', flexDirection: 'column', rowGap: 2, px: 3 }}>
+        {content.relatedContents?.map(content => (
+          <RelatedContent key={content.id} content={content}/>
+        ))}
       </Grid>
     </Grid>
   )
