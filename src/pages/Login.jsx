@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { Link as RouterLink, useNavigate } from 'react-router-dom'
+import { Link as RouterLink, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography'
 import AuthService from '../services/AuthService.js'
 import { setUser } from '../store/auth.js'
 import { openAlert } from '../store/alert.js'
-import {KEY_ACCESS_TOKEN} from '../constants.js';
+import { KEY_ACCESS_TOKEN } from '../constants.js';
 
 const authService = new AuthService()
 
@@ -21,7 +21,9 @@ export default function Login() {
 
   const navigate = useNavigate()
 
-  const [ form, setForm ] = useState({
+  const {state} = useLocation()
+
+  const [form, setForm] = useState({
     email: '',
     password: '',
   })
@@ -37,13 +39,19 @@ export default function Login() {
     event.preventDefault()
 
     try {
-      const { accessToken } = await authService.login(form)
+      const {accessToken} = await authService.login(form)
 
       localStorage.setItem(KEY_ACCESS_TOKEN, accessToken)
 
       const user = await authService.getUser()
 
       dispatch(setUser(user))
+
+      if (state.from) {
+        navigate(state.from)
+
+        return
+      }
 
       navigate('/')
     } catch (error) {
@@ -67,7 +75,7 @@ export default function Login() {
         alignItems: 'center',
       }}
     >
-      <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
+      <Avatar sx={{m: 1, bgcolor: 'primary.main'}}>
         <LockOutlinedIcon/>
       </Avatar>
 
@@ -75,7 +83,7 @@ export default function Login() {
         Login
       </Typography>
 
-      <Box component="form" id="login-form" sx={{ mt: 1 }} onSubmit={onSubmit}>
+      <Box component="form" id="login-form" sx={{mt: 1}} onSubmit={onSubmit}>
         <TextField
           id="email"
           name="email"
@@ -106,7 +114,7 @@ export default function Login() {
           htmlFor="login-form"
           fullWidth
           variant="contained"
-          sx={{ mt: 3, mb: 2 }}
+          sx={{mt: 3, mb: 2}}
         >
           Login
         </Button>

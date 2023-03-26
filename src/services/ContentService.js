@@ -14,4 +14,16 @@ export default class ContentService {
 
     return data
   }
+
+  async likeContent(id) {
+    const { data } = await client.post(`contents/${id}/like`)
+
+    return data
+  }
+
+  async dislikeContent(id) {
+    const { data } = await client.post(`contents/${id}/dislike`)
+
+    return data
+  }
 }

@@ -35,11 +35,15 @@ export default function useGetPublishedContents() {
           setData(response.data)
 
           setDataCount(response.meta.total)
+
+          setIsLoading(false)
         }
       } catch (err) {
-        setError(err)
-      } finally {
-        setIsLoading(false)
+        if (isMounted) {
+          setError(err)
+
+          setIsLoading(false)
+        }
       }
     }
 

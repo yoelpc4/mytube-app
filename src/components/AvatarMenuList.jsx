@@ -19,7 +19,7 @@ export default function AvatarMenuList() {
 
     dispatch(unsetUser())
 
-    navigate('/login')
+    navigate('/')
   }
 
   return (

@@ -1,6 +1,6 @@
-import { useEffect, useMemo } from 'react';
-import { useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -9,15 +9,25 @@ import useFindContent from '../hooks/useFindContent.jsx';
 import { openAlert } from '../store/alert.js';
 import useContent from '../hooks/useContent.jsx';
 import RelatedContent from '../components/RelatedContent.jsx';
+import LikeDislikeButtons from '../components/LikeDislikeButtons.jsx';
+import ContentService from '../services/ContentService.js';
+
+const contentService = new ContentService()
 
 export default function Content() {
   const dispatch = useDispatch()
 
+  const location = useLocation()
+
+  const navigate = useNavigate()
+
+  const user = useSelector(state => state.auth.user)
+
   const {contentId} = useParams()
 
-  const {data: content, error, isLoading} = useFindContent(contentId)
+  const {data: content, error, isLoading, setData, setIsLoading} = useFindContent(contentId)
 
-  const { createdAt, countViews, description } = useContent(content)
+  const { description, createdAt, countViews, countLikes, countDislikes } = useContent(content)
 
   useEffect(() => {
     if (error) {
@@ -31,6 +41,88 @@ export default function Content() {
       }))
     }
   }, [error])
+
+  async function onLike() {
+    if (isLoading) {
+      return
+    }
+
+    if (!user) {
+      navigate('/login', {
+        state: {
+          from: location.pathname,
+        },
+      })
+
+      return
+    }
+
+    setIsLoading(true)
+
+    try {
+      await contentService.likeContent(contentId)
+
+      setData({
+        ...content,
+        countLikes: content.countLikes + (content.isLiked ? -1 : 1),
+        countDislikes: content.countDislikes + (content.isDisliked ? -1 : 0),
+        isLiked: !content.isLiked,
+        isDisliked: false,
+      })
+    } catch (error) {
+      if (import.meta.env.DEV) {
+        console.log(error)
+      }
+
+      dispatch(openAlert({
+        type: 'error',
+        message: 'An error occurred while liking content'
+      }))
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  async function onDislike() {
+    if (isLoading) {
+      return
+    }
+
+    if (!user) {
+      navigate('/login', {
+        state: {
+          from: location.pathname,
+        },
+      })
+
+      return
+    }
+
+    setIsLoading(true)
+
+    try {
+      await contentService.dislikeContent(contentId)
+
+      setData({
+        ...content,
+        countLikes: content.countLikes + (content.isLiked ? -1 : 0),
+        countDislikes: content.countDislikes + (content.isDisliked ? -1 : 1),
+        isLiked: false,
+        isDisliked: !content.isDisliked,
+      })
+    } catch (error) {
+      if (import.meta.env.DEV) {
+        console.log(error)
+      }
+
+      dispatch(openAlert({
+        type: 'error',
+        message: 'An error occurred while disliking content'
+      }))
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   return content && (
     <Grid container rowSpacing={5} maxWidth="xl">
@@ -49,12 +141,23 @@ export default function Content() {
           {content.title}
         </Typography>
 
-        <Box sx={{display: 'flex', columnGap: 2}}>
+        <Box sx={{display: 'flex', alignItems: 'center', columnGap: 2}}>
           <Avatar alt="avatar" src="https://i.pravatar.cc/200"/>
 
           <Typography component="h2" variant="h6">
             {content.createdBy?.name}
           </Typography>
+
+          <LikeDislikeButtons
+            contentId={content.id}
+            countLikes={countLikes}
+            countDislikes={countDislikes}
+            isLiked={content.isLiked}
+            isDisliked={content.isDisliked}
+            isLoading={isLoading}
+            onLike={onLike}
+            onDislike={onDislike}
+          />
         </Box>
 
         <Box

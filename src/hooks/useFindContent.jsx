@@ -23,11 +23,15 @@ export default function useFindContent(id) {
 
         if (isMounted) {
           setData(response)
+
+          setIsLoading(false)
         }
       } catch (err) {
-        setError(err)
-      } finally {
-        setIsLoading(false)
+        if (isMounted) {
+          setError(err)
+
+          setIsLoading(false)
+        }
       }
     }
 
@@ -42,5 +46,7 @@ export default function useFindContent(id) {
     data,
     error,
     isLoading,
+    setData,
+    setIsLoading,
   }
 }
