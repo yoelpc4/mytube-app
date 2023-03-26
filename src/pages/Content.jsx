@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -10,22 +10,13 @@ import { openAlert } from '../store/alert.js';
 import useContent from '../hooks/useContent.jsx';
 import RelatedContent from '../components/RelatedContent.jsx';
 import LikeDislikeButtons from '../components/LikeDislikeButtons.jsx';
-import ContentService from '../services/ContentService.js';
-
-const contentService = new ContentService()
 
 export default function Content() {
   const dispatch = useDispatch()
 
-  const location = useLocation()
-
-  const navigate = useNavigate()
-
-  const user = useSelector(state => state.auth.user)
-
   const {contentId} = useParams()
 
-  const {data: content, error, isLoading, setData, setIsLoading} = useFindContent(contentId)
+  const {data: content, error, isLoading, setData} = useFindContent(contentId)
 
   const { description, createdAt, countViews, countLikes, countDislikes } = useContent(content)
 
@@ -42,86 +33,24 @@ export default function Content() {
     }
   }, [error])
 
-  async function onLike() {
-    if (isLoading) {
-      return
-    }
-
-    if (!user) {
-      navigate('/login', {
-        state: {
-          from: location.pathname,
-        },
-      })
-
-      return
-    }
-
-    setIsLoading(true)
-
-    try {
-      await contentService.likeContent(contentId)
-
-      setData({
-        ...content,
-        countLikes: content.countLikes + (content.isLiked ? -1 : 1),
-        countDislikes: content.countDislikes + (content.isDisliked ? -1 : 0),
-        isLiked: !content.isLiked,
-        isDisliked: false,
-      })
-    } catch (error) {
-      if (import.meta.env.DEV) {
-        console.log(error)
-      }
-
-      dispatch(openAlert({
-        type: 'error',
-        message: 'An error occurred while liking content'
-      }))
-    } finally {
-      setIsLoading(false)
-    }
+  function onLiked() {
+    setData({
+      ...content,
+      countLikes: content.countLikes + (content.isLiked ? -1 : 1),
+      countDislikes: content.countDislikes + (content.isDisliked ? -1 : 0),
+      isLiked: !content.isLiked,
+      isDisliked: false,
+    })
   }
 
-  async function onDislike() {
-    if (isLoading) {
-      return
-    }
-
-    if (!user) {
-      navigate('/login', {
-        state: {
-          from: location.pathname,
-        },
-      })
-
-      return
-    }
-
-    setIsLoading(true)
-
-    try {
-      await contentService.dislikeContent(contentId)
-
-      setData({
-        ...content,
-        countLikes: content.countLikes + (content.isLiked ? -1 : 0),
-        countDislikes: content.countDislikes + (content.isDisliked ? -1 : 1),
-        isLiked: false,
-        isDisliked: !content.isDisliked,
-      })
-    } catch (error) {
-      if (import.meta.env.DEV) {
-        console.log(error)
-      }
-
-      dispatch(openAlert({
-        type: 'error',
-        message: 'An error occurred while disliking content'
-      }))
-    } finally {
-      setIsLoading(false)
-    }
+  function onDisliked() {
+    setData({
+      ...content,
+      countLikes: content.countLikes + (content.isLiked ? -1 : 0),
+      countDislikes: content.countDislikes + (content.isDisliked ? -1 : 1),
+      isLiked: false,
+      isDisliked: !content.isDisliked,
+    })
   }
 
   return content && (
@@ -154,9 +83,8 @@ export default function Content() {
             countDislikes={countDislikes}
             isLiked={content.isLiked}
             isDisliked={content.isDisliked}
-            isLoading={isLoading}
-            onLike={onLike}
-            onDislike={onDislike}
+            onLiked={onLiked}
+            onDisliked={onDisliked}
           />
         </Box>
 

@@ -1,11 +1,106 @@
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import Button from '@mui/material/Button';
+import { openAlert } from '../store/alert.js';
+import ContentService from '../services/ContentService.js';
 
-export default function LikeDislikeButtons({ countLikes, countDislikes, isLiked, isDisliked, isLoading, onLike, onDislike }) {
+const contentService = new ContentService()
+
+export default function LikeDislikeButtons({
+                                             contentId,
+                                             countLikes,
+                                             countDislikes,
+                                             isLiked,
+                                             isDisliked,
+                                             onLiked,
+                                             onDisliked
+                                           }) {
+  const dispatch = useDispatch()
+
+  const location = useLocation()
+
+  const navigate = useNavigate()
+
+  const user = useSelector(state => state.auth.user)
+
+  const [isLoading, setIsLoading] = useState(false)
+
+  async function onLike() {
+    if (isLoading) {
+      return
+    }
+
+    if (!user) {
+      navigate('/login', {
+        state: {
+          from: location.pathname,
+        },
+      })
+
+      return
+    }
+
+    setIsLoading(true)
+
+    try {
+      await contentService.likeContent(contentId)
+
+      onLiked()
+    } catch (error) {
+      if (import.meta.env.DEV) {
+        console.log(error)
+      }
+
+      dispatch(openAlert({
+        type: 'error',
+        message: 'An error occurred while liking content'
+      }))
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  async function onDislike() {
+    if (isLoading) {
+      return
+    }
+
+    if (!user) {
+      navigate('/login', {
+        state: {
+          from: location.pathname,
+        },
+      })
+
+      return
+    }
+
+    setIsLoading(true)
+
+    try {
+      await contentService.dislikeContent(contentId)
+
+      onDisliked()
+    } catch (error) {
+      if (import.meta.env.DEV) {
+        console.log(error)
+      }
+
+      dispatch(openAlert({
+        type: 'error',
+        message: 'An error occurred while disliking content'
+      }))
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   return (
     <Box sx={{display: 'flex'}}>
       <Button

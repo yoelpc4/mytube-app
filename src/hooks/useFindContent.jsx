@@ -47,6 +47,5 @@ export default function useFindContent(id) {
     error,
     isLoading,
     setData,
-    setIsLoading,
   }
 }
