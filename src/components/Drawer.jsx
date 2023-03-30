@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles'
 import MuiDrawer from '@mui/material/Drawer'
 import ListItem from '@mui/material/ListItem'
 import HomeIcon from '@mui/icons-material/Home'
+import HistoryIcon from '@mui/icons-material/History'
 import DrawerListItemButton from './DrawerListItemButton.jsx'
 
 const StyledDrawer = styled(MuiDrawer, { shouldForwardProp: prop => prop !== 'open' })(
@@ -36,6 +37,11 @@ const routes = [
     to: '/',
     text: 'Home',
     icon: HomeIcon,
+  },
+  {
+    to: '/history',
+    text: 'History',
+    icon: HistoryIcon,
   },
 ]
 

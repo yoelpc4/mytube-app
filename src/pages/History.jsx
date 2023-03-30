@@ -1,11 +1,11 @@
-import { useEffect, useMemo, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import Grid from '@mui/material/Unstable_Grid2'
-import ContentFeed from '../components/ContentFeed.jsx';
-import useGetContentFeeds from '../hooks/useGetContentFeeds.jsx';
+import { useDispatch } from 'react-redux';
+import { useEffect, useMemo, useState } from 'react';
 import { openAlert } from '../store/alert.js';
+import ContentHistory from '../components/ContentHistory.jsx';
+import useGetContentHistories from '../hooks/useContentHistories.jsx';
 
-export default function Home() {
+export default function History() {
   const dispatch = useDispatch()
 
   const {
@@ -14,7 +14,7 @@ export default function Home() {
     error,
     isLoading,
     onLoadMore,
-  } = useGetContentFeeds()
+  } = useGetContentHistories()
 
   const [contents, setContents] = useState([])
 
@@ -35,22 +35,18 @@ export default function Home() {
 
       dispatch(openAlert({
         type: 'error',
-        message: 'An error occurred while fetching feeds',
+        message: 'An error occurred while fetching histories',
       }))
     }
   }, [error])
 
   return (
-    <Grid container rowSpacing={5} maxWidth="xl" sx={{ mx: 4 }}>
-      <Grid xs={12}>
-        <Grid container spacing={2}>
-          {contents.map(content => (
-            <Grid key={content.id} sm={12} md={6} lg={4} xl={3}>
-              <ContentFeed content={content}/>
-            </Grid>
-          ))}
+    <Grid container rowSpacing={2} maxWidth="xl" sx={{ mx: 4 }}>
+      {contents.map(content => (
+        <Grid key={content.id}>
+          <ContentHistory content={content}/>
         </Grid>
-      </Grid>
+      ))}
     </Grid>
   )
 }

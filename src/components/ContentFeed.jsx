@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
 import useContent from '../hooks/useContent.jsx';
 
-export default function HomeContent({content}) {
+export default function ContentFeed({content}) {
   const { createdAt, countViews } = useContent(content)
 
   return (

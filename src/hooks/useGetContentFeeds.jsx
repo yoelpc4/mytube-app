@@ -3,7 +3,7 @@ import ContentService from '../services/ContentService.js';
 
 const contentService = new ContentService()
 
-export default function useGetPublishedContents() {
+export default function useGetContentFeeds() {
   const [data, setData] = useState([])
 
   const [dataCount, setDataCount] = useState(0)
@@ -14,22 +14,18 @@ export default function useGetPublishedContents() {
 
   const [params, setParams] = useState({
     take: 12,
-    sort: {
-      field: 'createdAt',
-      order: 'desc',
-    },
   })
 
   useEffect(() => {
     let isMounted = true
 
-    const loadContents = async () => {
+    const loadData = async () => {
       setIsLoading(true)
 
       setError(null)
 
       try {
-        const response = await contentService.getPublishedContents(params)
+        const response = await contentService.getContentFeeds(params)
 
         if (isMounted) {
           setData(response.data)
@@ -47,7 +43,7 @@ export default function useGetPublishedContents() {
       }
     }
 
-    loadContents()
+    loadData()
 
     return () => {
      isMounted = false

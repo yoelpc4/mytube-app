@@ -1,8 +1,16 @@
 import client from './client.js';
 
 export default class ContentService {
-  async getPublishedContents(params = {}) {
-    const { data } = await client.get('contents/published', {
+  async getContentFeeds(params = {}) {
+    const { data } = await client.get('contents/feeds', {
+      params,
+    })
+
+    return data
+  }
+
+  async getContentHistories(params = {}) {
+    const { data } = await client.get('contents/histories', {
       params,
     })
 
