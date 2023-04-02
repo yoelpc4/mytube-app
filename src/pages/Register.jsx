@@ -22,6 +22,7 @@ export default function Register() {
 
   const [ form, setForm ] = useState({
     name: '',
+    username: '',
     email: '',
     password: '',
     passwordConfirmation: '',
@@ -86,6 +87,17 @@ export default function Register() {
           autoFocus
           margin="normal"
           value={form.name}
+          onInput={onInput}
+        />
+
+        <TextField
+          id="username"
+          name="username"
+          label="Username"
+          required
+          fullWidth
+          margin="normal"
+          value={form.username}
           onInput={onInput}
         />
 

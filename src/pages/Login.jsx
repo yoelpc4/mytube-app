@@ -24,7 +24,7 @@ export default function Login() {
   const {state} = useLocation()
 
   const [form, setForm] = useState({
-    email: '',
+    username: '',
     password: '',
   })
 
@@ -85,15 +85,14 @@ export default function Login() {
 
       <Box component="form" id="login-form" sx={{mt: 1}} onSubmit={onSubmit}>
         <TextField
-          id="email"
-          name="email"
-          type="email"
-          label="Email"
+          id="username"
+          name="username"
+          label="Username"
           required
           fullWidth
           autoFocus
           margin="normal"
-          value={form.email}
+          value={form.username}
           onInput={onInput}
         />
 
