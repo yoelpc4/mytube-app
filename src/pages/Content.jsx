@@ -73,9 +73,15 @@ export default function Content() {
         <Box sx={{display: 'flex', alignItems: 'center', columnGap: 2}}>
           <Avatar alt="avatar" src="https://i.pravatar.cc/200"/>
 
-          <Typography component="h2" variant="h6">
-            {content.createdBy?.name}
-          </Typography>
+          <Box>
+            <Typography component="h2" variant="h6">
+              {content.createdBy?.name}
+            </Typography>
+
+            <Typography>
+              {content.createdBy?.countSubscribers || 'No' } subscribers
+            </Typography>
+          </Box>
 
           <LikeDislikeButtons
             contentId={content.id}
