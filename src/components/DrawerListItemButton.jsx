@@ -26,6 +26,7 @@ export default function DrawerListItemButton({ open, route }) {
         justifyContent: open ? 'initial' : 'center',
         alignItems: 'center',
         px: 2.5,
+        borderRadius: '0 10px 10px 0',
       }}
     >
       <ListItemIcon
@@ -44,7 +45,7 @@ export default function DrawerListItemButton({ open, route }) {
         primaryTypographyProps={{
           color,
           sx: {
-            fontSize: open ? '1rem' : '.8rem'
+            fontSize: open ? '1rem' : '.875rem'
           },
       }}
       />

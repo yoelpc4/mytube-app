@@ -6,23 +6,26 @@ import YouTubeIcon from '@mui/icons-material/YouTube'
 
 export default function AppBar() {
   return (
-    <MuiAppBar color="default" position="fixed">
+    <MuiAppBar elevation={0} position="fixed" sx={{background: '#fff'}}>
       <Toolbar>
-        <Link to="/" style={{
-          display: 'flex',
-          alignItems: 'center',
-          textDecoration: 'none',
-          color: 'inherit',
-          marginLeft: '44px'
-        }}>
-          <YouTubeIcon fontSize="large" sx={{ mr: .5, color: 'red' }}/>
+        <Link
+          to="/"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            textDecoration: 'none',
+            color: 'inherit',
+            marginLeft: '44px'
+          }}
+        >
+          <YouTubeIcon fontSize="large" sx={{mr: .5, color: 'red'}}/>
 
           <Typography
-            component="h1"
+            component="span"
             variant="h5"
-            color="none"
+            color="black"
             noWrap
-            sx={{ fontWeight: 600 }}
+            sx={{fontWeight: 600}}
           >
             MyTube
           </Typography>

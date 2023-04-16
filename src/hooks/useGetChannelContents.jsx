@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import ContentService from '../services/ContentService.js';
+import ChannelService from '../services/ChannelService.js';
 
-const contentService = new ContentService()
+const channelService = new ChannelService()
 
-export default function useGetContentHistories() {
+export default function useGetChannelContents(id) {
   const [data, setData] = useState([])
 
   const [dataCount, setDataCount] = useState(0)
@@ -25,7 +25,7 @@ export default function useGetContentHistories() {
       setError(null)
 
       try {
-        const response = await contentService.getContentHistories(params)
+        const response = await channelService.getChannelContents(id)
 
         if (isMounted) {
           setData(response.data)
@@ -46,9 +46,9 @@ export default function useGetContentHistories() {
     loadData()
 
     return () => {
-     isMounted = false
+      isMounted = false
     }
-  }, [params])
+  }, [id])
 
   function onLoadMore() {
     const cursor = data.reduce((cursor, content) => {
@@ -69,18 +69,11 @@ export default function useGetContentHistories() {
     })
   }
 
-  function onReload() {
-    setParams({
-      ...params,
-    })
-  }
-
   return {
     data,
     dataCount,
     error,
     isLoading,
     onLoadMore,
-    onReload,
   }
 }

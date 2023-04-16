@@ -11,6 +11,7 @@ import AvatarButtonPopover from '../AvatarButtonPopover.jsx'
 const StyledAppBar = styled(MuiAppBar, {
   shouldForwardProp: prop => prop !== 'open',
 })(({ theme, open }) => ({
+  background: '#fff',
   zIndex: theme.zIndex.drawer + 1,
   transition: theme.transitions.create([ 'width', 'margin' ], {
     easing: theme.transitions.easing.sharp,
@@ -30,7 +31,7 @@ export default function AppBar({ open, setOpen }) {
   }
 
   return (
-    <StyledAppBar color="default" position="fixed" open={open}>
+    <StyledAppBar elevation={0} position="fixed" open={open}>
       <Toolbar>
         <IconButton
           edge="start"
@@ -39,16 +40,16 @@ export default function AppBar({ open, setOpen }) {
           sx={{ marginRight: '16px' }}
           onClick={onClickToggleDrawer}
         >
-          <MenuOutlinedIcon/>
+          <MenuOutlinedIcon sx={{ color: '#000' }}/>
         </IconButton>
 
         <Link to="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'inherit' }}>
           <YouTubeIcon fontSize="large" sx={{ mr: .5, color: 'red' }}/>
 
           <Typography
-            component="h1"
+            component="span"
             variant="h5"
-            color="none"
+            color="black"
             noWrap
             sx={{ fontWeight: 600 }}
           >

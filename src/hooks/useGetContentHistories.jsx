@@ -3,12 +3,18 @@ import ContentService from '../services/ContentService.js';
 
 const contentService = new ContentService()
 
-export default function useFindContent(id) {
-  const [data, setData] = useState(null)
+export default function useGetContentHistories() {
+  const [data, setData] = useState([])
+
+  const [dataCount, setDataCount] = useState(0)
 
   const [error, setError] = useState(null)
 
   const [isLoading, setIsLoading] = useState(false)
+
+  const [params, setParams] = useState({
+    take: 10,
+  })
 
   useEffect(() => {
     let isMounted = true
@@ -19,10 +25,12 @@ export default function useFindContent(id) {
       setError(null)
 
       try {
-        const response = await contentService.findContent(id)
+        const response = await contentService.getContentHistories(params)
 
         if (isMounted) {
-          setData(response)
+          setData(response.data)
+
+          setDataCount(response.meta.total)
 
           setIsLoading(false)
         }
@@ -40,12 +48,32 @@ export default function useFindContent(id) {
     return () => {
      isMounted = false
     }
-  }, [id])
+  }, [params])
+
+  function onLoadMore() {
+    const cursor = data.reduce((cursor, content) => {
+      if (!cursor || (content.id > cursor)) {
+        cursor = content.id
+      }
+
+      return cursor
+    }, null)
+
+    if (!cursor) {
+      return
+    }
+
+    setParams({
+      ...params,
+      cursor,
+    })
+  }
 
   return {
     data,
+    dataCount,
     error,
     isLoading,
-    setData,
+    onLoadMore,
   }
 }

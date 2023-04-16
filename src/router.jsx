@@ -4,7 +4,8 @@ import Auth from './middlewares/Auth.jsx';
 import Guest from './middlewares/Guest.jsx';
 import Primary from './layouts/Primary.jsx';
 import Secondary from './layouts/Secondary.jsx';
-import Content from './pages/Content.jsx';
+import Channel from './pages/Channel.jsx';
+import Watch from './pages/Watch.jsx';
 import History from './pages/History.jsx';
 import Login from './pages/Login.jsx'
 import Home from './pages/Home.jsx'
@@ -49,8 +50,12 @@ const router = createBrowserRouter([
             element: <Home/>,
           },
           {
-            path: '/contents/:contentId',
-            element: <Content/>,
+            path: '/watch/:contentId',
+            element: <Watch/>,
+          },
+          {
+            path: '/channel/:username',
+            element: <Channel/>,
           },
         ],
       },

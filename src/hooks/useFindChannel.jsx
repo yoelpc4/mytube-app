@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import ContentService from '../services/ContentService.js';
+import ChannelService from '../services/ChannelService.js';
 
-const contentService = new ContentService()
+const channelService = new ChannelService()
 
-export default function useFindContent(id) {
+export default function useFindChannel(username) {
   const [data, setData] = useState(null)
 
   const [error, setError] = useState(null)
@@ -19,7 +19,7 @@ export default function useFindContent(id) {
       setError(null)
 
       try {
-        const response = await contentService.findContent(id)
+        const response = await channelService.findChannel(username)
 
         if (isMounted) {
           setData(response)
@@ -38,9 +38,9 @@ export default function useFindContent(id) {
     loadData()
 
     return () => {
-     isMounted = false
+      isMounted = false
     }
-  }, [id])
+  }, [username])
 
   return {
     data,

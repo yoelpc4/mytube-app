@@ -6,13 +6,24 @@ import AppBar from '../components/Secondary/AppBar.jsx';
 
 export default function Secondary() {
   return (
-    <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
+    <Box sx={{display: 'flex'}}>
+      <CssBaseline/>
 
-      <AppBar />
+      <AppBar/>
 
-      <Container component="main" maxWidth="xs" sx={{ pt: 10 }}>
-        <Outlet />
+      <Container
+        component="main"
+        maxWidth="xs"
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          flexGrow: 1,
+          height: '90vh',
+          overflow: 'auto',
+          mt: 8
+        }}
+      >
+        <Outlet/>
       </Container>
     </Box>
   )

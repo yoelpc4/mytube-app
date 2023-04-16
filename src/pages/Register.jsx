@@ -61,14 +61,7 @@ export default function Register() {
   }
 
   return (
-    <Box
-      sx={{
-        marginTop: 8,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-      }}
-    >
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
         <LockOutlinedIcon/>
       </Avatar>

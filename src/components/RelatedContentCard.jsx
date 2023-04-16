@@ -1,16 +1,15 @@
-import { Link as RouterLink } from 'react-router-dom';
 import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
-import Avatar from '@mui/material/Avatar';
 import useContent from '../hooks/useContent.jsx';
+import ContentLink from './ContentLink.jsx';
+import ContentChannelLink from './ContentChannelLink.jsx';
 
-export default function RelatedContent({content}) {
-  const { createdAt, countViews } = useContent(content)
+export default function RelatedContentCard({content}) {
+  const {createdAt, countViews} = useContent(content)
 
   return (
-    <Link component={RouterLink} to={`/contents/${content.id}`} color="inherit" underline="none">
-      <Box sx={{ display: 'flex', columnGap: 2 }}>
+    <Box sx={{display: 'flex', columnGap: 2}}>
+      <ContentLink content={content}>
         <video
           title={content.title}
           src={content.videoUrl}
@@ -19,9 +18,11 @@ export default function RelatedContent({content}) {
           style={{borderRadius: '10px'}}
         >
         </video>
+      </ContentLink>
 
-        <Box sx={{display: 'flex'}}>
-          <Box>
+      <Box sx={{display: 'flex'}}>
+        <Box>
+          <ContentLink content={content}>
             <Typography
               component="h2"
               variant="subtitle1"
@@ -36,7 +37,9 @@ export default function RelatedContent({content}) {
               }}>
               {content.title}
             </Typography>
+          </ContentLink>
 
+          <ContentChannelLink content={content}>
             <Typography component="h3" variant="body2" color="grey.600" sx={{fontWeight: 500}}>
               {content.createdBy?.name}
             </Typography>
@@ -44,9 +47,9 @@ export default function RelatedContent({content}) {
             <Typography variant="body2" color="grey.600" sx={{fontWeight: 500}}>
               {countViews} views • {createdAt}
             </Typography>
-          </Box>
+          </ContentChannelLink>
         </Box>
       </Box>
-    </Link>
+    </Box>
   )
 }

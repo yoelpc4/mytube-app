@@ -2,8 +2,8 @@ import Grid from '@mui/material/Unstable_Grid2'
 import { useDispatch } from 'react-redux';
 import { useEffect, useMemo, useState } from 'react';
 import { openAlert } from '../store/alert.js';
-import ContentHistory from '../components/ContentHistory.jsx';
-import useGetContentHistories from '../hooks/useContentHistories.jsx';
+import HistoryContentCard from '../components/HistoryContentCard.jsx';
+import useGetContentHistories from '../hooks/useGetContentHistories.jsx';
 
 export default function History() {
   const dispatch = useDispatch()
@@ -28,23 +28,25 @@ export default function History() {
   }, [data])
 
   useEffect(() => {
-    if (error) {
-      if (import.meta.env.DEV) {
-        console.log(error)
-      }
-
-      dispatch(openAlert({
-        type: 'error',
-        message: 'An error occurred while fetching histories',
-      }))
+    if (!error) {
+      return
     }
+
+    if (import.meta.env.DEV) {
+      console.log(error)
+    }
+
+    dispatch(openAlert({
+      type: 'error',
+      message: 'An error occurred while fetching histories',
+    }))
   }, [error])
 
   return (
-    <Grid container rowSpacing={2} maxWidth="xl" sx={{ mx: 4 }}>
+    <Grid container rowSpacing={2} maxWidth="xl">
       {contents.map(content => (
         <Grid key={content.id}>
-          <ContentHistory content={content}/>
+          <HistoryContentCard content={content}/>
         </Grid>
       ))}
     </Grid>
