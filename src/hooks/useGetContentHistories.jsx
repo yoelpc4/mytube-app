@@ -6,14 +6,14 @@ const contentService = new ContentService()
 export default function useGetContentHistories() {
   const [data, setData] = useState([])
 
-  const [dataCount, setDataCount] = useState(0)
+  const [total, setTotal] = useState(0)
 
   const [error, setError] = useState(null)
 
   const [isLoading, setIsLoading] = useState(false)
 
   const [params, setParams] = useState({
-    take: 10,
+    take: 12,
   })
 
   useEffect(() => {
@@ -30,7 +30,7 @@ export default function useGetContentHistories() {
         if (isMounted) {
           setData(response.data)
 
-          setDataCount(response.meta.total)
+          setTotal(response.meta.total)
 
           setIsLoading(false)
         }
@@ -51,27 +51,19 @@ export default function useGetContentHistories() {
   }, [params])
 
   function onLoadMore() {
-    const cursor = data.reduce((cursor, content) => {
-      if (!cursor || (content.id > cursor)) {
-        cursor = content.id
-      }
-
-      return cursor
-    }, null)
-
-    if (!cursor) {
+    if (!data.length) {
       return
     }
 
     setParams({
       ...params,
-      cursor,
+      cursor: data[data.length - 1].id,
     })
   }
 
   return {
     data,
-    dataCount,
+    total,
     error,
     isLoading,
     onLoadMore,

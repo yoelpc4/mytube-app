@@ -1,30 +1,30 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import Grid from '@mui/material/Unstable_Grid2'
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
 import FeedContentCard from '../components/FeedContentCard.jsx';
-import useGetContentFeeds from '../hooks/useGetContentFeeds.jsx';
 import { openAlert } from '../store/alert.js';
+import useGetContentFeeds from '../hooks/useGetContentFeeds.jsx';
+import useInfiniteScroll from '../hooks/useInfiniteScroll.jsx';
 
 export default function Home() {
   const dispatch = useDispatch()
 
-  const {
-    data,
-    dataCount,
-    error,
-    isLoading,
-    onLoadMore,
+  const {data, total, error, isLoading, onLoadMore,
   } = useGetContentFeeds()
 
   const [contents, setContents] = useState([])
 
-  const hasMoreContents = useMemo(() => contents.length === dataCount, [contents, dataCount])
+  const {rootRef, targetRef, hasMore} = useInfiniteScroll({
+    records: contents,
+    total,
+    isLoading,
+    onLoadMore,
+  })
 
   useEffect(() => {
-    setContents([
-      ...contents,
-      ...data,
-    ])
+    setContents(contents.concat(data))
   }, [data])
 
   useEffect(() => {
@@ -43,12 +43,25 @@ export default function Home() {
   }, [error])
 
   return (
-    <Grid container spacing={2} maxWidth="xl">
-      {contents.map(content => (
-        <Grid key={content.id} sm={12} md={6} lg={4} xl={3}>
-          <FeedContentCard content={content}/>
-        </Grid>
-      ))}
-    </Grid>
+    <Box
+      ref={rootRef}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        height: '100%',
+        overflowY: 'scroll',
+      }}
+    >
+      <Grid container spacing={2} maxWidth="xl">
+        {contents.map(content => (
+          <Grid key={content.id} sm={12} md={6} lg={4} xl={3}>
+            <FeedContentCard content={content}/>
+          </Grid>
+        ))}
+      </Grid>
+
+      {hasMore && <CircularProgress ref={targetRef}/>}
+    </Box>
   )
 }

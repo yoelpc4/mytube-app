@@ -6,7 +6,7 @@ const contentService = new ContentService()
 export default function useGetContentFeeds() {
   const [data, setData] = useState([])
 
-  const [dataCount, setDataCount] = useState(0)
+  const [total, setTotal] = useState(0)
 
   const [error, setError] = useState(null)
 
@@ -30,7 +30,7 @@ export default function useGetContentFeeds() {
         if (isMounted) {
           setData(response.data)
 
-          setDataCount(response.meta.total)
+          setTotal(response.meta.total)
 
           setIsLoading(false)
         }
@@ -51,36 +51,21 @@ export default function useGetContentFeeds() {
   }, [params])
 
   function onLoadMore() {
-    const cursor = data.reduce((cursor, content) => {
-      if (!cursor || (content.id > cursor)) {
-        cursor = content.id
-      }
-
-      return cursor
-    }, null)
-
-    if (!cursor) {
+    if (!data.length) {
       return
     }
 
     setParams({
       ...params,
-      cursor,
-    })
-  }
-
-  function onReload() {
-    setParams({
-      ...params,
+      cursor: data[data.length - 1].id,
     })
   }
 
   return {
     data,
-    dataCount,
+    total,
     error,
     isLoading,
     onLoadMore,
-    onReload,
   }
 }

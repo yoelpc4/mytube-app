@@ -6,7 +6,7 @@ const channelService = new ChannelService()
 export default function useGetChannelContents(id) {
   const [data, setData] = useState([])
 
-  const [dataCount, setDataCount] = useState(0)
+  const [total, setTotal] = useState(0)
 
   const [error, setError] = useState(null)
 
@@ -25,12 +25,12 @@ export default function useGetChannelContents(id) {
       setError(null)
 
       try {
-        const response = await channelService.getChannelContents(id)
+        const response = await channelService.getChannelContents(id, params)
 
         if (isMounted) {
           setData(response.data)
 
-          setDataCount(response.meta.total)
+          setTotal(response.meta.total)
 
           setIsLoading(false)
         }
@@ -48,30 +48,22 @@ export default function useGetChannelContents(id) {
     return () => {
       isMounted = false
     }
-  }, [id])
+  }, [id, params])
 
   function onLoadMore() {
-    const cursor = data.reduce((cursor, content) => {
-      if (!cursor || (content.id > cursor)) {
-        cursor = content.id
-      }
-
-      return cursor
-    }, null)
-
-    if (!cursor) {
+    if (!data.length) {
       return
     }
 
     setParams({
       ...params,
-      cursor,
+      cursor: data[data.length - 1].id,
     })
   }
 
   return {
     data,
-    dataCount,
+    total,
     error,
     isLoading,
     onLoadMore,

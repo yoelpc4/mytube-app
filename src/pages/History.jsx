@@ -1,30 +1,29 @@
-import Grid from '@mui/material/Unstable_Grid2'
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useEffect, useMemo, useState } from 'react';
-import { openAlert } from '../store/alert.js';
+import Grid from '@mui/material/Unstable_Grid2'
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 import HistoryContentCard from '../components/HistoryContentCard.jsx';
+import { openAlert } from '../store/alert.js';
 import useGetContentHistories from '../hooks/useGetContentHistories.jsx';
+import useInfiniteScroll from '../hooks/useInfiniteScroll.jsx';
 
 export default function History() {
   const dispatch = useDispatch()
 
-  const {
-    data,
-    dataCount,
-    error,
+  const {data, total, error, isLoading,  onLoadMore} = useGetContentHistories()
+
+  const [contentViews, setContentViews] = useState([])
+
+  const {rootRef, targetRef, hasMore} = useInfiniteScroll({
+    records: contentViews,
+    total,
     isLoading,
     onLoadMore,
-  } = useGetContentHistories()
-
-  const [contents, setContents] = useState([])
-
-  const hasMoreContents = useMemo(() => contents.length === dataCount, [contents, dataCount])
+  })
 
   useEffect(() => {
-    setContents([
-      ...contents,
-      ...data,
-    ])
+    setContentViews(contentViews.concat(data))
   }, [data])
 
   useEffect(() => {
@@ -43,12 +42,25 @@ export default function History() {
   }, [error])
 
   return (
-    <Grid container rowSpacing={2} maxWidth="xl">
-      {contents.map(content => (
-        <Grid key={content.id}>
-          <HistoryContentCard content={content}/>
-        </Grid>
-      ))}
-    </Grid>
+    <Box
+      ref={rootRef}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        height: '100%',
+        overflowY: 'scroll',
+      }}
+    >
+      <Grid container rowSpacing={2} maxWidth="xl">
+        {contentViews.map(contentView => (
+          <Grid key={contentView.id}>
+            <HistoryContentCard content={contentView.content}/>
+          </Grid>
+        ))}
+      </Grid>
+
+      {hasMore && <CircularProgress ref={targetRef}/>}
+    </Box>
   )
 }
