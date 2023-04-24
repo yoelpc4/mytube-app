@@ -17,7 +17,7 @@ export default function Primary() {
 
       <Drawer open={open} />
 
-      <Container component="main" maxWidth="xl" sx={{ flexGrow: 1, height: '90vh', overflow: 'auto', mt: 8}}>
+      <Container component="main" maxWidth="xl" sx={{ flexGrow: 1, overflow: 'auto', mt: 8}}>
         <Outlet/>
       </Container>
     </Box>

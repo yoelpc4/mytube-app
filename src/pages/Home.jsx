@@ -49,7 +49,7 @@ export default function Home() {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        height: '100%',
+        height: '90vh',
         overflowY: 'scroll',
       }}
     >

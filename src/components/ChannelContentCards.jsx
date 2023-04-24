@@ -48,7 +48,7 @@ export default function ChannelContentCards({channelId}) {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        height: '100%',
+        height: '90vh',
         overflowY: 'scroll',
       }}
     >

@@ -16,9 +16,8 @@ export default function useInfiniteScroll({ records, total, isLoading, onLoadMor
       return
     }
 
-
     onLoadMore()
-  }, [hasMore, isLoading, entry?.isIntersecting])
+  }, [entry?.isIntersecting])
 
   return {
     rootRef,

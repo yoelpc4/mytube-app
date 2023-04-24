@@ -11,7 +11,7 @@ import useInfiniteScroll from '../hooks/useInfiniteScroll.jsx';
 export default function History() {
   const dispatch = useDispatch()
 
-  const {data, total, error, isLoading,  onLoadMore} = useGetContentHistories()
+  const {data, total, error, isLoading, onLoadMore} = useGetContentHistories()
 
   const [contentViews, setContentViews] = useState([])
 
@@ -48,13 +48,13 @@ export default function History() {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        height: '100%',
+        height: '90vh',
         overflowY: 'scroll',
       }}
     >
       <Grid container rowSpacing={2} maxWidth="xl">
         {contentViews.map(contentView => (
-          <Grid key={contentView.id}>
+          <Grid key={contentView.id} xs={12}>
             <HistoryContentCard content={contentView.content}/>
           </Grid>
         ))}
