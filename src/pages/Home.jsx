@@ -11,12 +11,11 @@ import useInfiniteScroll from '../hooks/useInfiniteScroll.jsx';
 export default function Home() {
   const dispatch = useDispatch()
 
-  const {data, total, error, isLoading, onLoadMore,
-  } = useGetContentFeeds()
+  const {data, total, error, isLoading, onLoadMore} = useGetContentFeeds()
 
   const [contents, setContents] = useState([])
 
-  const {rootRef, targetRef, hasMore} = useInfiniteScroll({
+  const {ref, hasMore} = useInfiniteScroll({
     records: contents,
     total,
     isLoading,
@@ -44,7 +43,6 @@ export default function Home() {
 
   return (
     <Box
-      ref={rootRef}
       sx={{
         display: 'flex',
         flexDirection: 'column',
@@ -61,7 +59,7 @@ export default function Home() {
         ))}
       </Grid>
 
-      {hasMore && <CircularProgress ref={targetRef}/>}
+      {hasMore && <CircularProgress ref={ref}/>}
     </Box>
   )
 }

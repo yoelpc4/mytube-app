@@ -15,7 +15,7 @@ export default function ChannelContentCards({channelId}) {
 
   const [contents, setContents] = useState([])
 
-  const {rootRef, targetRef, hasMore} = useInfiniteScroll({
+  const {ref, hasMore} = useInfiniteScroll({
     records: contents,
     total,
     isLoading,
@@ -43,7 +43,6 @@ export default function ChannelContentCards({channelId}) {
 
   return (
     <Box
-      ref={rootRef}
       sx={{
         display: 'flex',
         flexDirection: 'column',
@@ -60,7 +59,7 @@ export default function ChannelContentCards({channelId}) {
         ))}
       </Grid>
 
-      {hasMore && <CircularProgress ref={targetRef}/>}
+      {hasMore && <CircularProgress ref={ref}/>}
     </Box>
   )
 }

@@ -1,27 +1,21 @@
-import { useEffect, useMemo, useRef } from 'react';
-import { useIntersection } from '@mantine/hooks';
+import { useEffect, useMemo } from 'react';
+import { useInView } from 'react-intersection-observer';
 
 export default function useInfiniteScroll({ records, total, isLoading, onLoadMore }) {
-  const rootRef = useRef()
-
   const hasMore = useMemo(() => records.length < total, [records, total])
 
-  const {ref: targetRef, entry} = useIntersection({
-    root: rootRef.current,
-    threshold: 1,
-  })
+  const {ref, inView} = useInView()
 
   useEffect(() => {
-    if (!hasMore || isLoading || !(entry && entry.isIntersecting)) {
+    if (isLoading || !inView) {
       return
     }
 
     onLoadMore()
-  }, [entry?.isIntersecting])
+  }, [inView])
 
   return {
-    rootRef,
-    targetRef,
+    ref,
     hasMore,
   }
 }

@@ -15,7 +15,7 @@ export default function History() {
 
   const [contentViews, setContentViews] = useState([])
 
-  const {rootRef, targetRef, hasMore} = useInfiniteScroll({
+  const {ref, hasMore} = useInfiniteScroll({
     records: contentViews,
     total,
     isLoading,
@@ -43,7 +43,6 @@ export default function History() {
 
   return (
     <Box
-      ref={rootRef}
       sx={{
         display: 'flex',
         flexDirection: 'column',
@@ -60,7 +59,7 @@ export default function History() {
         ))}
       </Grid>
 
-      {hasMore && <CircularProgress ref={targetRef}/>}
+      {hasMore && <CircularProgress ref={ref}/>}
     </Box>
   )
 }
