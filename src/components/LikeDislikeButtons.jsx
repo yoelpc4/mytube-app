@@ -9,6 +9,7 @@ import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import Button from '@mui/material/Button';
 import { openAlert } from '../store/alert.js';
 import ContentService from '../services/ContentService.js';
+import { selectUser } from '../store/auth.js';
 
 const contentService = new ContentService()
 
@@ -27,7 +28,7 @@ export default function LikeDislikeButtons({
 
   const navigate = useNavigate()
 
-  const user = useSelector(state => state.auth.user)
+  const user = useSelector(selectUser)
 
   const [isLoading, setIsLoading] = useState(false)
 

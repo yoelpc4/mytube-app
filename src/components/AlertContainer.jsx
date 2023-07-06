@@ -1,14 +1,14 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useTheme } from '@mui/material'
 import Alert from '@mui/material/Alert'
-import { closeAlert } from '../store/alert.js'
+import { closeAlert, selectAlerts } from '../store/alert.js'
 
 export default function AlertContainer() {
   const dispatch = useDispatch()
 
   const theme = useTheme()
 
-  const alerts = useSelector(state => state.alert.alerts)
+  const alerts = useSelector(selectAlerts)
 
   function onClose(index) {
     dispatch(closeAlert(index))

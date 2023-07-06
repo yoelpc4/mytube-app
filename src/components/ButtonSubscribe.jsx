@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import ChannelService from '../services/ChannelService.js';
 import { openAlert } from '../store/alert.js';
+import { selectUser } from '../store/auth.js';
 
 const channelService = new ChannelService()
 
@@ -13,7 +14,7 @@ export default function ButtonSubscribe({ channel, onSubscribed, onUnsubscribed 
 
   const navigate = useNavigate()
 
-  const user = useSelector(state => state.auth.user)
+  const user = useSelector(selectUser)
 
   const [hasSubscribed, setHasSubscribed] = useState(false)
 

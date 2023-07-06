@@ -1,7 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+const name = 'alert'
+
 const alertSlice = createSlice({
-  name: 'alert',
+  name,
   initialState: {
     alerts: [],
   },
@@ -16,5 +18,7 @@ const alertSlice = createSlice({
 })
 
 export const { openAlert, closeAlert } = alertSlice.actions
+
+export const selectAlerts = state => state[name].alerts
 
 export default alertSlice.reducer
