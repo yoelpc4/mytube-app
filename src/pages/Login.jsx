@@ -1,14 +1,14 @@
-import { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { Link as RouterLink, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom'
 import Avatar from '@mui/material/Avatar'
-import Button from '@mui/material/Button'
+import LoadingButton from '@mui/lab/LoadingButton';
 import TextField from '@mui/material/TextField'
 import Link from '@mui/material/Link'
 import Grid from '@mui/material/Grid'
 import Box from '@mui/material/Box'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
+import useForm from '../hooks/useForm.jsx';
 import AuthService from '../services/AuthService.js'
 import { setUser } from '../store/auth.js'
 import { openAlert } from '../store/alert.js'
@@ -23,47 +23,40 @@ export default function Login() {
 
   const {state} = useLocation()
 
-  const [form, setForm] = useState({
-    username: '',
-    password: '',
+  const {form, errors, isLoading, setErrors, handleInput, handleSubmit} = useForm({
+    data: {
+      username: '',
+      password: '',
+    },
+    handleSuccess,
+    handleError,
   })
 
-  function onInput(event) {
-    setForm({
-      ...form,
-      [event.target.name]: event.target.value,
-    })
+  async function handleSuccess() {
+    const {accessToken} = await authService.login(form)
+
+    localStorage.setItem(KEY_ACCESS_TOKEN, accessToken)
+
+    const user = await authService.getUser()
+
+    dispatch(setUser(user))
+
+    navigate(state.from ?? '/')
   }
 
-  async function onSubmit(event) {
-    event.preventDefault()
+  function handleError(response) {
+    if (response.status === 401) {
+      setErrors({
+        username: 'The given credentials are incorrect',
+      })
 
-    try {
-      const {accessToken} = await authService.login(form)
-
-      localStorage.setItem(KEY_ACCESS_TOKEN, accessToken)
-
-      const user = await authService.getUser()
-
-      dispatch(setUser(user))
-
-      if (state.from) {
-        navigate(state.from)
-
-        return
-      }
-
-      navigate('/')
-    } catch (error) {
-      if (import.meta.env.DEV) {
-        console.log(error)
-      }
-
-      dispatch(openAlert({
-        type: 'error',
-        message: 'An error occurred while logging in'
-      }))
+      return
     }
+
+    dispatch(openAlert({
+      type: 'error',
+      message: 'An error occurred while logging in'
+    }))
   }
 
   return (
@@ -76,7 +69,7 @@ export default function Login() {
         Login
       </Typography>
 
-      <Box component="form" id="login-form" sx={{mt: 1}} onSubmit={onSubmit}>
+      <Box component="form" id="login-form" sx={{mt: 1}} onSubmit={handleSubmit}>
         <TextField
           id="username"
           name="username"
@@ -86,7 +79,9 @@ export default function Login() {
           autoFocus
           margin="normal"
           value={form.username}
-          onInput={onInput}
+          error={!!errors.username}
+          helperText={errors.username}
+          onInput={handleInput}
         />
 
         <TextField
@@ -98,18 +93,22 @@ export default function Login() {
           required
           fullWidth
           value={form.password}
-          onInput={onInput}
+          error={!!errors.password}
+          helperText={errors.password}
+          onInput={handleInput}
         />
 
-        <Button
+        <LoadingButton
           type="submit"
-          htmlFor="login-form"
+          form="login-form"
           fullWidth
           variant="contained"
+          loading={isLoading}
+          disabled={isLoading}
           sx={{mt: 3, mb: 2}}
         >
-          Login
-        </Button>
+          <span>Login</span>
+        </LoadingButton>
 
         <Grid container justifyContent="flex-end">
           <Grid item>

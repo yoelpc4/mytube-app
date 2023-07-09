@@ -1,14 +1,14 @@
-import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import Avatar from '@mui/material/Avatar'
-import Button from '@mui/material/Button'
+import LoadingButton from '@mui/lab/LoadingButton';
 import TextField from '@mui/material/TextField'
 import Grid from '@mui/material/Grid'
 import Link from '@mui/material/Link'
 import Box from '@mui/material/Box'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
+import useForm from '../hooks/useForm.jsx';
 import AuthService from '../services/AuthService.js'
 import { setUser } from '../store/auth.js'
 import { openAlert } from '../store/alert.js'
@@ -20,44 +20,34 @@ export default function Register() {
 
   const navigate = useNavigate()
 
-  const [ form, setForm ] = useState({
-    name: '',
-    username: '',
-    email: '',
-    password: '',
-    passwordConfirmation: '',
+  const {form, errors, isLoading, handleInput, handleSubmit} = useForm({
+    data: {
+      name: '',
+      username: '',
+      email: '',
+      password: '',
+      passwordConfirmation: '',
+    },
+    handleSuccess,
+    handleError,
   })
+  async function handleSuccess() {
+    const {accessToken} = await authService.register(form)
 
-  function onInput(event) {
-    setForm({
-      ...form,
-      [event.target.name]: event.target.value,
-    })
+    localStorage.setItem('accessToken', accessToken)
+
+    const user = await authService.getUser()
+
+    dispatch(setUser(user))
+
+    navigate('/')
   }
 
-  async function onSubmit(event) {
-    event.preventDefault()
-
-    try {
-      const { accessToken } = await authService.register(form)
-
-      localStorage.setItem('accessToken', accessToken)
-
-      const user = await authService.getUser()
-
-      dispatch(setUser(user))
-
-      navigate('/')
-    } catch (error) {
-      if (import.meta.env.DEV) {
-        console.log(error)
-      }
-
-      dispatch(openAlert({
-        type: 'error',
-        message: 'An error occurred while registering'
-      }))
-    }
+  function handleError() {
+    dispatch(openAlert({
+      type: 'error',
+      message: 'An error occurred while registering'
+    }))
   }
 
   return (
@@ -70,7 +60,7 @@ export default function Register() {
         Register
       </Typography>
 
-      <Box component="form" id="register-form" sx={{ mt: 1 }} onSubmit={onSubmit}>
+      <Box component="form" id="register-form" sx={{ mt: 1 }} onSubmit={handleSubmit}>
         <TextField
           id="name"
           name="name"
@@ -80,7 +70,9 @@ export default function Register() {
           autoFocus
           margin="normal"
           value={form.name}
-          onInput={onInput}
+          error={!!errors.name}
+          helperText={errors.name}
+          onInput={handleInput}
         />
 
         <TextField
@@ -91,7 +83,9 @@ export default function Register() {
           fullWidth
           margin="normal"
           value={form.username}
-          onInput={onInput}
+          error={!!errors.username}
+          helperText={errors.username}
+          onInput={handleInput}
         />
 
         <TextField
@@ -103,7 +97,7 @@ export default function Register() {
           fullWidth
           margin="normal"
           value={form.email}
-          onInput={onInput}
+          onInput={handleInput}
         />
 
         <TextField
@@ -115,7 +109,9 @@ export default function Register() {
           required
           fullWidth
           value={form.password}
-          onInput={onInput}
+          error={!!errors.password}
+          helperText={errors.password}
+          onInput={handleInput}
         />
 
         <TextField
@@ -127,18 +123,22 @@ export default function Register() {
           required
           fullWidth
           value={form.passwordConfirmation}
-          onInput={onInput}
+          error={!!errors.passwordConfirmation}
+          helperText={errors.passwordConfirmation}
+          onInput={handleInput}
         />
 
-        <Button
+        <LoadingButton
           type="submit"
-          htmlFor="register-form"
+          form="register-form"
           fullWidth
           variant="contained"
+          loading={isLoading}
+          disabled={isLoading}
           sx={{ mt: 3, mb: 2 }}
         >
-          Register
-        </Button>
+          <span>Register</span>
+        </LoadingButton>
 
         <Grid container justifyContent="flex-end">
           <Grid item>
