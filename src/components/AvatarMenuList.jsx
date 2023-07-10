@@ -1,4 +1,4 @@
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import Box from '@mui/material/Box'
 import List from '@mui/material/List'
@@ -7,12 +7,14 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined'
-import { unsetUser } from '../store/auth.js'
+import { selectUser, unsetUser } from '../store/auth.js'
 
 export default function AvatarMenuList() {
   const dispatch = useDispatch()
 
   const navigate = useNavigate()
+
+  const user = useSelector(selectUser)
 
   function onClickLogoutListItem() {
     localStorage.removeItem('accessToken')
@@ -23,18 +25,20 @@ export default function AvatarMenuList() {
   }
 
   return (
-    <Box sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+    <Box sx={{width: '100%', maxWidth: 360, bgcolor: 'background.paper'}}>
       <nav>
         <List>
-          <ListItem disablePadding onClick={onClickLogoutListItem}>
-            <ListItemButton>
-              <ListItemIcon>
-                <LogoutOutlinedIcon/>
-              </ListItemIcon>
+          {user && (
+            <ListItem disablePadding onClick={onClickLogoutListItem}>
+              <ListItemButton>
+                <ListItemIcon>
+                  <LogoutOutlinedIcon/>
+                </ListItemIcon>
 
-              <ListItemText primary="Logout"/>
-            </ListItemButton>
-          </ListItem>
+                <ListItemText primary="Logout"/>
+              </ListItemButton>
+            </ListItem>
+          )}
         </List>
       </nav>
     </Box>
