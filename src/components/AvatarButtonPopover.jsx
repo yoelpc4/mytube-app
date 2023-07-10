@@ -9,17 +9,17 @@ export default function AvatarButtonPopover() {
 
   const open = Boolean(anchorEl)
 
-  function onClick(event) {
+  function handleClick(event) {
     setAnchorEl(event.currentTarget)
   }
 
-  function onClose() {
+  function handleClose() {
     setAnchorEl(null)
   }
 
   return (
     <>
-      <Button onClick={onClick}>
+      <Button onClick={handleClick}>
         <Avatar alt="avatar" src="https://i.pravatar.cc/200" />
       </Button>
 
@@ -34,9 +34,9 @@ export default function AvatarButtonPopover() {
           vertical: 'top',
           horizontal: 'right',
         }}
-        onClose={onClose}
+        onClose={handleClose}
       >
-        <AvatarMenuList />
+        <AvatarMenuList onMenuClicked={handleClose} />
       </Popover>
     </>
   )

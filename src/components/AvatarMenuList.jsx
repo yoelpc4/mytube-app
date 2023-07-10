@@ -9,19 +9,21 @@ import ListItemText from '@mui/material/ListItemText'
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined'
 import { selectUser, unsetUser } from '../store/auth.js'
 
-export default function AvatarMenuList() {
+export default function AvatarMenuList({onMenuClicked}) {
   const dispatch = useDispatch()
 
   const navigate = useNavigate()
 
   const user = useSelector(selectUser)
 
-  function onClickLogoutListItem() {
+  function handleClickLogoutListItem() {
     localStorage.removeItem('accessToken')
 
     dispatch(unsetUser())
 
     navigate('/')
+
+    onMenuClicked()
   }
 
   return (
@@ -29,7 +31,7 @@ export default function AvatarMenuList() {
       <nav>
         <List>
           {user && (
-            <ListItem disablePadding onClick={onClickLogoutListItem}>
+            <ListItem disablePadding onClick={handleClickLogoutListItem}>
               <ListItemButton>
                 <ListItemIcon>
                   <LogoutOutlinedIcon/>
