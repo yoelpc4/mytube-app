@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import ContentService from '../services/ContentService.js';
+import ContentService from '@/services/ContentService.js';
 
 const contentService = new ContentService()
 

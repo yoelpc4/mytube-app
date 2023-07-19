@@ -7,9 +7,9 @@ import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import Button from '@mui/material/Button';
-import { openAlert } from '../store/alert.js';
-import ContentService from '../services/ContentService.js';
-import { selectUser } from '../store/auth.js';
+import { openAlert } from '@/store/alert.js';
+import ContentService from '@/services/ContentService.js';
+import { selectUser } from '@/store/auth.js';
 
 const contentService = new ContentService()
 

@@ -3,10 +3,10 @@ import { useDispatch } from 'react-redux';
 import Grid from '@mui/material/Unstable_Grid2'
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
-import FeedContentCard from '../components/FeedContentCard.jsx';
-import { openAlert } from '../store/alert.js';
-import useGetContentFeeds from '../hooks/useGetContentFeeds.jsx';
-import useInfiniteScroll from '../hooks/useInfiniteScroll.jsx';
+import FeedContentCard from '@/components/FeedContentCard.jsx';
+import { openAlert } from '@/store/alert.js';
+import useGetContentFeeds from '@/hooks/useGetContentFeeds.jsx';
+import useInfiniteScroll from '@/hooks/useInfiniteScroll.jsx';
 
 export default function Home() {
   const dispatch = useDispatch()

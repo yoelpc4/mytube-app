@@ -3,10 +3,10 @@ import { useDispatch } from 'react-redux';
 import Grid from '@mui/material/Unstable_Grid2'
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
-import HistoryContentCard from '../components/HistoryContentCard.jsx';
-import { openAlert } from '../store/alert.js';
-import useGetContentHistories from '../hooks/useGetContentHistories.jsx';
-import useInfiniteScroll from '../hooks/useInfiniteScroll.jsx';
+import HistoryContentCard from '@/components/HistoryContentCard.jsx';
+import { openAlert } from '@/store/alert.js';
+import useGetContentHistories from '@/hooks/useGetContentHistories.jsx';
+import useInfiniteScroll from '@/hooks/useInfiniteScroll.jsx';
 
 export default function History() {
   const dispatch = useDispatch()

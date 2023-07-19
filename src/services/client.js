@@ -1,6 +1,6 @@
 import axios from 'axios';
 import nprogress from 'nprogress';
-import {KEY_ACCESS_TOKEN} from '../constants.js';
+import {KEY_ACCESS_TOKEN} from '@/constants.js';
 
 const client = axios.create({
     baseURL: import.meta.env.VITE_API_URL,

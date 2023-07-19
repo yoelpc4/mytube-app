@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 import { useMemo } from 'react';
-import { formatCount } from '../helpers.js';
+import { formatCount } from '@/helpers.js';
 
 export default function useContent(content) {
   const description = useMemo(() => content?.description ? content?.description.replaceAll("\n", '<br>') : '', [content?.description])

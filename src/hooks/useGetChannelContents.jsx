@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import ChannelService from '../services/ChannelService.js';
+import ChannelService from '@/services/ChannelService.js';
 
 const channelService = new ChannelService()
 

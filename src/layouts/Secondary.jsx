@@ -2,7 +2,7 @@ import { Outlet } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import Container from '@mui/material/Container';
-import AppBar from '../components/Secondary/AppBar.jsx';
+import AppBar from '@/components/Secondary/AppBar.jsx';
 
 export default function Secondary() {
   return (

@@ -7,7 +7,7 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined'
-import { selectUser, unsetUser } from '../store/auth.js'
+import { selectUser, unsetUser } from '@/store/auth.js'
 
 export default function AvatarMenuList({onMenuClicked}) {
   const dispatch = useDispatch()

@@ -8,11 +8,11 @@ import Grid from '@mui/material/Grid'
 import Box from '@mui/material/Box'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
-import useForm from '../hooks/useForm.jsx';
-import AuthService from '../services/AuthService.js'
-import { setUser } from '../store/auth.js'
-import { openAlert } from '../store/alert.js'
-import { KEY_ACCESS_TOKEN } from '../constants.js';
+import useForm from '@/hooks/useForm.jsx';
+import AuthService from '@/services/AuthService.js'
+import { setUser } from '@/store/auth.js'
+import { openAlert } from '@/store/alert.js'
+import { KEY_ACCESS_TOKEN } from '@/constants.js';
 
 const authService = new AuthService()
 

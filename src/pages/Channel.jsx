@@ -4,11 +4,11 @@ import { useParams } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
-import ChannelContentCards from '../components/ChannelContentCards.jsx';
-import useFindChannel from '../hooks/useFindChannel.jsx';
-import useChannel from '../hooks/useChannel.jsx';
-import { openAlert } from '../store/alert.js';
-import ButtonSubscribe from '../components/ButtonSubscribe.jsx';
+import ChannelContentCards from '@/components/ChannelContentCards.jsx';
+import useFindChannel from '@/hooks/useFindChannel.jsx';
+import useChannel from '@/hooks/useChannel.jsx';
+import { openAlert } from '@/store/alert.js';
+import ButtonSubscribe from '@/components/ButtonSubscribe.jsx';
 
 export default function Channel() {
   const dispatch = useDispatch()

@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
-import ChannelService from '../services/ChannelService.js';
-import { openAlert } from '../store/alert.js';
-import { selectUser } from '../store/auth.js';
+import ChannelService from '@/services/ChannelService.js';
+import { openAlert } from '@/store/alert.js';
+import { selectUser } from '@/store/auth.js';
 
 const channelService = new ChannelService()
 

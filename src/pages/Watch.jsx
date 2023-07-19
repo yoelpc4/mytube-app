@@ -5,14 +5,14 @@ import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
-import useFindContent from '../hooks/useFindContent.jsx';
-import { openAlert } from '../store/alert.js';
-import useContent from '../hooks/useContent.jsx';
-import RelatedContentCard from '../components/RelatedContentCard.jsx';
-import ButtonSubscribe from '../components/ButtonSubscribe.jsx';
-import ContentChannelLink from '../components/ContentChannelLink.jsx';
-import LikeDislikeButtons from '../components/LikeDislikeButtons.jsx';
-import useChannel from '../hooks/useChannel.jsx';
+import useFindContent from '@/hooks/useFindContent.jsx';
+import { openAlert } from '@/store/alert.js';
+import useContent from '@/hooks/useContent.jsx';
+import RelatedContentCard from '@/components/RelatedContentCard.jsx';
+import ButtonSubscribe from '@/components/ButtonSubscribe.jsx';
+import ContentChannelLink from '@/components/ContentChannelLink.jsx';
+import LikeDislikeButtons from '@/components/LikeDislikeButtons.jsx';
+import useChannel from '@/hooks/useChannel.jsx';
 
 export default function Watch() {
   const dispatch = useDispatch()
