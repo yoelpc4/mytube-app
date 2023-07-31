@@ -51,3 +51,9 @@ export const roundNumber = (number, decimals = 0) => {
 
   return (Math.trunc(number * power) / power).toString().replace(/\.00$/, '')
 }
+
+export const transformValidationErrors = (response) => response.data.errors.reduce((newErrors, { param, msg }) => {
+  newErrors[param] = msg
+
+  return newErrors
+}, {})

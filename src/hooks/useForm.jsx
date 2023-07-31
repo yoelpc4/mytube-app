@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { transformValidationErrors } from '@/helpers.js';
 
 export default function useForm({data, handleSuccess, handleError, handleFinally = () => {}}) {
   const initialData = useRef()
@@ -43,11 +44,7 @@ export default function useForm({data, handleSuccess, handleError, handleFinally
       const response = error.response
 
       if (response.status === 400) {
-        setErrors(response.data.errors.reduce((newErrors, { param, msg }) => {
-          newErrors[param] = msg
-
-          return newErrors
-        }, {}))
+        setErrors(transformValidationErrors(response))
 
         return
       }

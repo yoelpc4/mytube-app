@@ -6,6 +6,7 @@ import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined
 import ChannelService from '@/services/ChannelService.js';
 import { openAlert } from '@/store/alert.js';
 import { selectUser } from '@/store/auth.js';
+import { transformValidationErrors } from '@/helpers.js';
 
 const channelService = new ChannelService()
 
@@ -62,6 +63,19 @@ export default function ButtonSubscribe({ channel, onSubscribed, onUnsubscribed 
     } catch (error) {
       if (import.meta.env.DEV) {
         console.log(error)
+      }
+
+      const response = error.response
+
+      if (response.status === 400) {
+        const errors = transformValidationErrors(response)
+
+        dispatch(openAlert({
+          type: 'error',
+          message: `${errors.id}`
+        }))
+
+        return
       }
 
       dispatch(openAlert({
