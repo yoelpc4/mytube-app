@@ -62,7 +62,7 @@ export default function Login() {
 
     dispatch(openAlert({
       type: 'error',
-      message: 'An error occurred while logging in'
+      message: 'An error occurred while log in'
     }))
   }
 

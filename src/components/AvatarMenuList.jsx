@@ -1,13 +1,19 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Box from '@mui/material/Box'
+import Divider from '@mui/material/Divider';
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined'
+import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
 import { selectUser, unsetUser } from '@/store/auth.js'
+import { openAlert } from '@/store/alert.js';
+import AuthService from '@/services/AuthService.js';
+
+const authService = new AuthService()
 
 export default function AvatarMenuList({onMenuClicked}) {
   const dispatch = useDispatch()
@@ -16,19 +22,40 @@ export default function AvatarMenuList({onMenuClicked}) {
 
   const user = useSelector(selectUser)
 
-  function handleClickLogoutListItem() {
-    dispatch(unsetUser())
+  async function handleClickLogoutListItem() {
+    try {
+      await authService.logout()
 
-    navigate('/')
+      dispatch(unsetUser())
 
-    onMenuClicked()
+      navigate('/')
+    } catch (error) {
+      dispatch(openAlert({
+        type: 'error',
+        message: 'An error occurred while logging out'
+      }))
+    }
   }
 
   return (
     <Box sx={{width: '100%', maxWidth: 360, bgcolor: 'background.paper'}}>
       <nav>
-        <List>
-          {user && (
+        {user && (
+          <List>
+            <ListItem disablePadding>
+              <Link to="/account" style={{textDecoration: 'none', color: 'inherit'}} onClick={onMenuClicked}>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <ManageAccountsOutlinedIcon/>
+                  </ListItemIcon>
+
+                  <ListItemText primary="Account"/>
+                </ListItemButton>
+              </Link>
+            </ListItem>
+
+            <Divider/>
+
             <ListItem disablePadding onClick={handleClickLogoutListItem}>
               <ListItemButton>
                 <ListItemIcon>
@@ -38,8 +65,8 @@ export default function AvatarMenuList({onMenuClicked}) {
                 <ListItemText primary="Logout"/>
               </ListItemButton>
             </ListItem>
-          )}
-        </List>
+          </List>
+        )}
       </nav>
     </Box>
   )

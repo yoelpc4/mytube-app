@@ -13,8 +13,24 @@ export default class AuthService {
         return data
     }
 
+    async logout() {
+        await client.post('auth/logout')
+    }
+
     async getUser() {
         const { data } = await client.get('auth/user')
+
+        return data
+    }
+
+    async updateProfile(payload) {
+        const { data } = await client.post('auth/update-profile', payload)
+
+        return data
+    }
+
+    async updatePassword(payload) {
+        const { data } = await client.post('auth/update-password', payload)
 
         return data
     }
