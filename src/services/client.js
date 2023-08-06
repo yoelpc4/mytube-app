@@ -1,19 +1,24 @@
 import axios from 'axios';
 import nprogress from 'nprogress';
-import {KEY_ACCESS_TOKEN} from '@/constants.js';
+import store from '@/store'
+import { setToken } from '@/store/csrf.js';
+import CsrfService from '@/services/CsrfService.js';
 
 const client = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
     headers: {
         Accept: 'application/json',
     },
+    withCredentials: true,
+    xsrfCookieName: null,
+    xsrfHeaderName: null,
 })
 
 const fulfillRequest = config => {
-    const accessToken = localStorage.getItem(KEY_ACCESS_TOKEN)
+    const {csrf} = store.getState()
 
-    if (accessToken) {
-        config.headers.Authorization = `Bearer ${accessToken}`
+    if (!['get', 'head', 'options'].includes(config.method)) {
+        config.headers['x-csrf-token'] = csrf.token
     }
 
     if (nprogress.isStarted()) {
@@ -37,8 +42,22 @@ const fulfillResponse = response => {
     return response
 }
 
-const rejectResponse = error => {
+const rejectResponse = async error => {
     nprogress.done()
+
+    const {config, response} = error
+
+    if (response.status === 403 && response.data.message === 'Invalid CSRF token' && !config.isRetried) {
+        config.isRetried = true
+
+        const csrfService = new CsrfService()
+
+        const { csrfToken } = await csrfService.getCsrfToken()
+
+        store.dispatch(setToken(csrfToken))
+
+        return client(config)
+    }
 
     return Promise.reject(error)
 }

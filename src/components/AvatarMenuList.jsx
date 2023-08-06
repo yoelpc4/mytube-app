@@ -17,8 +17,6 @@ export default function AvatarMenuList({onMenuClicked}) {
   const user = useSelector(selectUser)
 
   function handleClickLogoutListItem() {
-    localStorage.removeItem('accessToken')
-
     dispatch(unsetUser())
 
     navigate('/')

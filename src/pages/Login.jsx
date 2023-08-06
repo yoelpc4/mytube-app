@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux'
-import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom'
+import { Link as RouterLink, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import Avatar from '@mui/material/Avatar'
 import LoadingButton from '@mui/lab/LoadingButton';
 import TextField from '@mui/material/TextField'
@@ -12,7 +12,6 @@ import useForm from '@/hooks/useForm.jsx';
 import AuthService from '@/services/AuthService.js'
 import { setUser } from '@/store/auth.js'
 import { openAlert } from '@/store/alert.js'
-import { KEY_ACCESS_TOKEN } from '@/constants.js';
 
 const authService = new AuthService()
 
@@ -22,6 +21,10 @@ export default function Login() {
   const navigate = useNavigate()
 
   const {state} = useLocation()
+
+  const [searchParams] = useSearchParams()
+
+  const redirect = searchParams.get('redirect')
 
   const {form, errors, isLoading, setErrors, handleInput, handleSubmit} = useForm({
     data: {
@@ -33,13 +36,17 @@ export default function Login() {
   })
 
   async function handleSuccess() {
-    const {accessToken} = await authService.login(form)
-
-    localStorage.setItem(KEY_ACCESS_TOKEN, accessToken)
+    await authService.login(form)
 
     const user = await authService.getUser()
 
     dispatch(setUser(user))
+
+    if (redirect) {
+      window.location.replace(redirect)
+
+      return
+    }
 
     navigate(state.from ?? '/')
   }

@@ -2,18 +2,31 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { Provider } from 'react-redux'
 import { RouterProvider } from 'react-router-dom'
-import store from './store'
-import router from './router.jsx'
-import AuthService from './services/AuthService.js';
-import { setUser } from './store/auth.js';
-import './assets/css/index.css'
+import store from '@/store'
+import router from '@/router.jsx'
+import AuthService from '@/services/AuthService.js';
+import CsrfService from '@/services/CsrfService.js';
+import { setToken } from '@/store/csrf.js';
+import { setUser } from '@/store/auth.js';
+import '@/assets/css/index.css'
 
 const authService = new AuthService()
 
-try {
-  const user = await authService.getUser()
+const csrfService = new CsrfService()
 
-  store.dispatch(setUser(user))
+try {
+  const [csrfTokenResult, userResult] = await Promise.allSettled([
+    csrfService.getCsrfToken(),
+    authService.getUser()
+  ])
+
+  if (csrfTokenResult.status === 'fulfilled') {
+    store.dispatch(setToken(csrfTokenResult.value.csrfToken))
+  }
+
+  if (userResult.status === 'fulfilled') {
+    store.dispatch(setUser(userResult.value))
+  }
 } catch {
   // no-op
 } finally {

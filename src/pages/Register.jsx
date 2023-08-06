@@ -32,9 +32,7 @@ export default function Register() {
     handleError,
   })
   async function handleSuccess() {
-    const {accessToken} = await authService.register(form)
-
-    localStorage.setItem('accessToken', accessToken)
+    await authService.register(form)
 
     const user = await authService.getUser()
 
