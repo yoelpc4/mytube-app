@@ -6,8 +6,8 @@ import store from '@/store'
 import router from '@/router.jsx'
 import AuthService from '@/services/AuthService.js';
 import CsrfService from '@/services/CsrfService.js';
-import { setToken } from '@/store/csrf.js';
 import { setUser } from '@/store/auth.js';
+import client from '@/services/client.js';
 import '@/assets/css/index.css'
 
 const authService = new AuthService()
@@ -21,7 +21,7 @@ try {
   ])
 
   if (csrfTokenResult.status === 'fulfilled') {
-    store.dispatch(setToken(csrfTokenResult.value.csrfToken))
+    client.defaults.headers.common['x-csrf-token'] = csrfTokenResult.value.csrfToken
   }
 
   if (userResult.status === 'fulfilled') {
