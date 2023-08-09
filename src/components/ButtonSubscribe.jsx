@@ -3,12 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
-import ChannelService from '@/services/ChannelService.js';
 import { openAlert } from '@/store/alert.js';
 import { selectUser } from '@/store/auth.js';
 import { transformValidationErrors } from '@/helpers.js';
-
-const channelService = new ChannelService()
+import client from '@/utils/client.js';
 
 export default function ButtonSubscribe({ channel, onSubscribed, onUnsubscribed }) {
   const dispatch = useDispatch()
@@ -48,13 +46,13 @@ export default function ButtonSubscribe({ channel, onSubscribed, onUnsubscribed 
 
     try {
       if (hasSubscribed) {
-        await channelService.unsubscribe(channel.id)
+        await client.post(`channels/${channel.id}/unsubscribe`)
 
         setHasSubscribed(false)
 
         onUnsubscribed()
       } else {
-        await channelService.subscribe(channel.id)
+        await client.post(`channels/${channel.id}/subscribe`)
 
         setHasSubscribed(true)
 

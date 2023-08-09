@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
-import ContentService from '@/services/ContentService.js';
-
-const contentService = new ContentService()
+import client from '@/utils/client.js';
 
 export default function useGetContentFeeds() {
   const [data, setData] = useState([])
@@ -25,12 +23,14 @@ export default function useGetContentFeeds() {
       setError(null)
 
       try {
-        const response = await contentService.getContentFeeds(params)
+        const response = await client.get('contents/feeds', {
+          params,
+        })
 
         if (isMounted) {
-          setData(response.data)
+          setData(response.data.data)
 
-          setTotal(response.meta.total)
+          setTotal(response.data.meta.total)
 
           setIsLoading(false)
         }

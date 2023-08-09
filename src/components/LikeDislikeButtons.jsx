@@ -8,10 +8,8 @@ import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import Button from '@mui/material/Button';
 import { openAlert } from '@/store/alert.js';
-import ContentService from '@/services/ContentService.js';
 import { selectUser } from '@/store/auth.js';
-
-const contentService = new ContentService()
+import client from '@/utils/client.js';
 
 export default function LikeDislikeButtons({
                                              contentId,
@@ -50,7 +48,7 @@ export default function LikeDislikeButtons({
     setIsLoading(true)
 
     try {
-      await contentService.likeContent(contentId)
+      await client.post(`contents/${contentId}/like`)
 
       onLiked()
     } catch (error) {
@@ -85,7 +83,7 @@ export default function LikeDislikeButtons({
     setIsLoading(true)
 
     try {
-      await contentService.dislikeContent(contentId)
+      await client.get(`contents/${contentId}/dislike`)
 
       onDisliked()
     } catch (error) {

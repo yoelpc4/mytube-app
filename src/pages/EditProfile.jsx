@@ -5,12 +5,9 @@ import TextField from '@mui/material/TextField';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
 import useForm from '@/hooks/useForm.jsx';
-import AuthService from '@/services/AuthService.js'
 import { openAlert } from '@/store/alert.js';
 import { selectUser, setUser } from '@/store/auth.js';
-import { useState } from 'react';
-
-const authService = new AuthService()
+import client from '@/utils/client.js';
 
 export default function EditProfile() {
   const dispatch = useDispatch()
@@ -28,9 +25,9 @@ export default function EditProfile() {
   })
 
   async function handleSuccess() {
-    const updatedUser = await authService.updateProfile(form)
+    const {data} = await client.post('auth/update-profile', form)
 
-    dispatch(setUser(updatedUser))
+    dispatch(setUser(data))
 
     dispatch(openAlert({
       type: 'success',

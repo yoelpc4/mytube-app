@@ -11,9 +11,7 @@ import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined'
 import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
 import { selectUser, unsetUser } from '@/store/auth.js'
 import { openAlert } from '@/store/alert.js';
-import AuthService from '@/services/AuthService.js';
-
-const authService = new AuthService()
+import client from '@/utils/client.js';
 
 export default function AvatarMenuList({onMenuClicked}) {
   const dispatch = useDispatch()
@@ -24,7 +22,7 @@ export default function AvatarMenuList({onMenuClicked}) {
 
   async function handleClickLogoutListItem() {
     try {
-      await authService.logout()
+      await client.post('auth/logout')
 
       dispatch(unsetUser())
 

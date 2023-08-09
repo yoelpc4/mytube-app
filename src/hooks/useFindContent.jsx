@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
-import ContentService from '@/services/ContentService.js';
-
-const contentService = new ContentService()
+import client from '@/utils/client.js';
 
 export default function useFindContent(id) {
   const [data, setData] = useState(null)
@@ -19,10 +17,10 @@ export default function useFindContent(id) {
       setError(null)
 
       try {
-        const response = await contentService.findContent(id)
+        const response = await client.get(`contents/${id}`)
 
         if (isMounted) {
-          setData(response)
+          setData(response.data)
 
           setIsLoading(false)
         }

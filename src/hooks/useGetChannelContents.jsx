@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
-import ChannelService from '@/services/ChannelService.js';
-
-const channelService = new ChannelService()
+import client from '@/utils/client.js';
 
 export default function useGetChannelContents(id) {
   const [data, setData] = useState([])
@@ -25,12 +23,14 @@ export default function useGetChannelContents(id) {
       setError(null)
 
       try {
-        const response = await channelService.getChannelContents(id, params)
+        const response = await client.get(`channels/${id}/contents`, {
+          params,
+        })
 
         if (isMounted) {
-          setData(response.data)
+          setData(response.data.data)
 
-          setTotal(response.meta.total)
+          setTotal(response.data.meta.total)
 
           setIsLoading(false)
         }

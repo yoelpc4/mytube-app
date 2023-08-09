@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
-import ChannelService from '@/services/ChannelService.js';
-
-const channelService = new ChannelService()
+import client from '@/utils/client.js';
 
 export default function useFindChannel(username) {
   const [data, setData] = useState(null)
@@ -19,10 +17,10 @@ export default function useFindChannel(username) {
       setError(null)
 
       try {
-        const response = await channelService.findChannel(username)
+        const response = await client.get(`channels/${username}`)
 
         if (isMounted) {
-          setData(response)
+          setData(response.data)
 
           setIsLoading(false)
         }
