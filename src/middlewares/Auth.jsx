@@ -1,6 +1,6 @@
-import { useSelector } from 'react-redux';
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { selectUser } from '@/store/auth.js';
+import { useSelector } from 'react-redux'
+import { Navigate, Outlet, useLocation } from 'react-router-dom'
+import { selectUser } from '@/store/auth.js'
 
 export default function Auth() {
   const location = useLocation()

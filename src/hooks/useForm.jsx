@@ -1,70 +1,44 @@
-import { useRef, useState } from 'react';
-import { transformValidationErrors } from '@/helpers.js';
+import { useCallback, useRef, useState } from 'react'
+import { transformServerErrors } from '@/utils/helpers.js'
 
-export default function useForm({data, handleSuccess, handleError, handleFinally = () => {}}) {
-  const initialData = useRef()
+export default function useForm(initialInputs = {}) {
+  const initialInputsRef = useRef(initialInputs)
 
-  const [form, setForm] = useState(data)
+  const [inputs, setInputs] = useState(initialInputsRef.current)
 
   const [errors, setErrors] = useState({})
 
-  const [isLoading, setIsLoading] = useState(false)
-
-  initialData.current = data
-
-  function handleInput(event) {
-    setForm({
-      ...form,
+  const handleInput = useCallback(event => {
+    setInputs(inputs => ({
+      ...inputs,
       [event.target.name]: event.target.value,
-    })
-  }
+    }))
+  }, [setInputs])
 
-  function handleReset() {
-    setForm(initialData.current)
-  }
-
-  async function handleSubmit(event) {
-    event.preventDefault()
-
-    if (isLoading) {
-      return
-    }
-
-    setIsLoading(true)
+  const handleReset = useCallback(() => {
+    setInputs(initialInputsRef.current)
 
     setErrors({})
+  }, [setInputs, setErrors])
 
-    try {
-      await handleSuccess()
-    } catch (error) {
-      if (import.meta.env.DEV) {
-        console.log(error)
-      }
+  const handleSubmit = useCallback(callback => event => {
+    event.preventDefault()
 
-      const response = error.response
+    callback(inputs)
+  }, [inputs])
 
-      if (response.status === 400) {
-        setErrors(transformValidationErrors(response))
-
-        return
-      }
-
-      await handleError(response)
-    } finally {
-      setIsLoading(false)
-
-      handleFinally()
-    }
-  }
+  const handleServerErrors = useCallback(serverErrors => {
+    setErrors(transformServerErrors(serverErrors))
+  }, [setErrors])
 
   return {
-    form,
+    inputs,
     errors,
-    isLoading,
-    setForm,
+    setInputs,
     setErrors,
     handleInput,
     handleReset,
     handleSubmit,
+    handleServerErrors,
   }
 }

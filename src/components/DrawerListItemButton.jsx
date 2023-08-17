@@ -1,17 +1,15 @@
-import { useMemo } from 'react'
+import PropTypes from 'prop-types'
 import { NavLink, useMatch } from 'react-router-dom'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import ListItemButton from '@mui/material/ListItemButton'
 
-export default function DrawerListItemButton({ open, route }) {
+function DrawerListItemButton({ open, route }) {
   const match = useMatch({
     path: route.to,
   })
 
-  const color = useMemo(() => {
-    return !!match ? 'primary' : 'inherit'
-  }, [match])
+  const color = match ? 'primary' : 'inherit'
 
   const MenuIcon = route.icon
 
@@ -52,3 +50,10 @@ export default function DrawerListItemButton({ open, route }) {
     </ListItemButton>
   )
 }
+
+DrawerListItemButton.propTypes = {
+  open: PropTypes.bool,
+  route: PropTypes.object,
+}
+
+export default DrawerListItemButton

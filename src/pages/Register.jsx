@@ -1,54 +1,77 @@
+import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import Avatar from '@mui/material/Avatar'
-import LoadingButton from '@mui/lab/LoadingButton';
+import LoadingButton from '@mui/lab/LoadingButton'
 import TextField from '@mui/material/TextField'
 import Grid from '@mui/material/Grid'
 import Link from '@mui/material/Link'
 import Box from '@mui/material/Box'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
-import useForm from '@/hooks/useForm.jsx';
 import { setUser } from '@/store/auth.js'
 import { openAlert } from '@/store/alert.js'
-import client from '@/utils/client.js';
+import useAsync from '@/hooks/useAsync.jsx'
+import useForm from '@/hooks/useForm.jsx'
+import client from '@/utils/client.js'
 
 export default function Register() {
   const dispatch = useDispatch()
 
   const navigate = useNavigate()
 
-  const {form, errors, isLoading, handleInput, handleSubmit} = useForm({
-    data: {
-      name: '',
-      username: '',
-      email: '',
-      password: '',
-      passwordConfirmation: '',
-    },
-    handleSuccess,
-    handleError,
-  })
-  async function handleSuccess() {
-    await client.post('auth/register', form)
+  const {data, error, isLoading, run} = useAsync()
 
-    const {data} = await client.get('auth/user')
+  const {inputs, errors, handleInput, handleSubmit, handleServerErrors} = useForm({
+    name: '',
+    username: '',
+    email: '',
+    password: '',
+    passwordConfirmation: '',
+  })
+
+  const submit = () => {
+    if (isLoading) {
+      return
+    }
+
+    run(client.post('auth/register', inputs).then(({data}) => data))
+  }
+
+  useEffect(() => {
+    if (!data) {
+      return
+    }
 
     dispatch(setUser(data))
 
     navigate('/')
-  }
+  }, [dispatch, navigate, data])
 
-  function handleError() {
+  useEffect(() => {
+    if (!error) {
+      return
+    }
+
+    const {response} = error
+
+    if (response) {
+      if (response.status === 400) {
+        handleServerErrors(response.data.errors)
+
+        return
+      }
+    }
+
     dispatch(openAlert({
       type: 'error',
-      message: 'An error occurred while registering'
+      message: 'An error occurred while registering',
     }))
-  }
+  }, [dispatch, error, handleServerErrors])
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
+    <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+      <Avatar sx={{m: 1, bgcolor: 'primary.main'}}>
         <LockOutlinedIcon/>
       </Avatar>
 
@@ -56,7 +79,7 @@ export default function Register() {
         Register
       </Typography>
 
-      <Box component="form" id="register-form" sx={{ mt: 1 }} onSubmit={handleSubmit}>
+      <Box component="form" id="register-form" sx={{mt: 1}} onSubmit={handleSubmit(submit)}>
         <TextField
           id="name"
           name="name"
@@ -65,7 +88,7 @@ export default function Register() {
           fullWidth
           autoFocus
           margin="normal"
-          value={form.name}
+          value={inputs.name}
           error={!!errors.name}
           helperText={errors.name}
           onInput={handleInput}
@@ -78,7 +101,7 @@ export default function Register() {
           required
           fullWidth
           margin="normal"
-          value={form.username}
+          value={inputs.username}
           error={!!errors.username}
           helperText={errors.username}
           onInput={handleInput}
@@ -92,7 +115,7 @@ export default function Register() {
           required
           fullWidth
           margin="normal"
-          value={form.email}
+          value={inputs.email}
           onInput={handleInput}
         />
 
@@ -104,7 +127,7 @@ export default function Register() {
           margin="normal"
           required
           fullWidth
-          value={form.password}
+          value={inputs.password}
           error={!!errors.password}
           helperText={errors.password}
           onInput={handleInput}
@@ -118,7 +141,7 @@ export default function Register() {
           margin="normal"
           required
           fullWidth
-          value={form.passwordConfirmation}
+          value={inputs.passwordConfirmation}
           error={!!errors.passwordConfirmation}
           helperText={errors.passwordConfirmation}
           onInput={handleInput}
@@ -131,7 +154,7 @@ export default function Register() {
           variant="contained"
           loading={isLoading}
           disabled={isLoading}
-          sx={{ mt: 3, mb: 2 }}
+          sx={{mt: 3, mb: 2}}
         >
           <span>Register</span>
         </LoadingButton>

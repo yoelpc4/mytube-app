@@ -1,10 +1,11 @@
+import PropTypes from 'prop-types'
 import List from '@mui/material/List'
 import { styled } from '@mui/material/styles'
 import MuiDrawer from '@mui/material/Drawer'
 import ListItem from '@mui/material/ListItem'
 import HomeIcon from '@mui/icons-material/Home'
 import HistoryIcon from '@mui/icons-material/History'
-import DrawerListItemButton from './DrawerListItemButton.jsx'
+import DrawerListItemButton from '@/components/DrawerListItemButton.jsx'
 
 const StyledDrawer = styled(MuiDrawer, { shouldForwardProp: prop => prop !== 'open' })(
   ({ theme, open }) => ({
@@ -46,7 +47,7 @@ const routes = [
   },
 ]
 
-export default function Drawer({ open }) {
+function Drawer({ open }) {
   return (
     <StyledDrawer variant="permanent" open={open} sx={{ pt: 8 }}>
       <List component="nav">
@@ -59,3 +60,9 @@ export default function Drawer({ open }) {
     </StyledDrawer>
   )
 }
+
+Drawer.propTypes = {
+  open: PropTypes.bool,
+}
+
+export default Drawer

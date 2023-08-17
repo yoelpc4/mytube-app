@@ -1,44 +1,54 @@
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
-import useFindContent from '@/hooks/useFindContent.jsx';
-import { openAlert } from '@/store/alert.js';
-import useContent from '@/hooks/useContent.jsx';
-import RelatedContentCard from '@/components/RelatedContentCard.jsx';
-import ButtonSubscribe from '@/components/ButtonSubscribe.jsx';
-import ContentChannelLink from '@/components/ContentChannelLink.jsx';
-import LikeDislikeButtons from '@/components/LikeDislikeButtons.jsx';
-import useChannel from '@/hooks/useChannel.jsx';
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
+import Grid from '@mui/material/Unstable_Grid2'
+import Typography from '@mui/material/Typography'
+import Box from '@mui/material/Box'
+import Avatar from '@mui/material/Avatar'
+import { openAlert } from '@/store/alert.js'
+import { selectUser } from '@/store/auth.js'
+import RelatedContentCard from '@/components/RelatedContentCard.jsx'
+import ButtonSubscribe from '@/components/ButtonSubscribe.jsx'
+import ContentChannelLink from '@/components/ContentChannelLink.jsx'
+import LikeDislikeButtons from '@/components/LikeDislikeButtons.jsx'
+import useAsync from '@/hooks/useAsync.jsx'
+import useChannel from '@/hooks/useChannel.jsx'
+import useContent from '@/hooks/useContent.jsx'
+import client from '@/utils/client.js'
 
 export default function Watch() {
   const dispatch = useDispatch()
 
   const {contentId} = useParams()
 
-  const {data: content, error, isLoading, setData} = useFindContent(contentId)
+  const user = useSelector(selectUser)
+
+  const {data: content, error, run, setData} = useAsync()
 
   const {description, createdAt, countViews, countLikes, countDislikes} = useContent(content)
 
   const {countSubscribers} = useChannel(content?.createdBy)
 
   useEffect(() => {
+    const controller = new AbortController()
+
+    run(client.get(`contents/${contentId}`, {
+      signal: controller.signal,
+    }).then(({data}) => data))
+
+    return () => controller.abort()
+  }, [run, contentId])
+
+  useEffect(() => {
     if (!error) {
       return
-    }
-
-    if (import.meta.env.DEV) {
-      console.log(error)
     }
 
     dispatch(openAlert({
       type: 'error',
       message: 'An error occurred while fetching content',
     }))
-  }, [error])
+  }, [dispatch, error])
 
   function onLiked() {
     setData({
@@ -110,12 +120,14 @@ export default function Watch() {
                 </Typography>
               </ContentChannelLink>
 
-              <Typography sx={{ fontSize: '0.875rem' }}>
+              <Typography sx={{fontSize: '0.875rem'}}>
                 {countSubscribers || 'No'} subscriber{countSubscribers === 1 ? '' : 's'}
               </Typography>
             </Box>
 
-            <ButtonSubscribe channel={content.createdBy} onSubscribed={onSubscribed} onUnsubscribed={onUnsubscribed}/>
+            {user.id !== content.createdBy?.id && (
+              <ButtonSubscribe channel={content.createdBy} onSubscribed={onSubscribed} onUnsubscribed={onUnsubscribed}/>
+            )}
           </Box>
 
           <LikeDislikeButtons

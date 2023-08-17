@@ -1,11 +1,11 @@
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Avatar from '@mui/material/Avatar';
-import useContent from '@/hooks/useContent.jsx';
-import ContentLink from './ContentLink.jsx';
-import ContentChannelLink from './ContentChannelLink.jsx';
+import PropTypes from 'prop-types'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import ContentLink from '@/components/ContentLink.jsx'
+import ContentChannelLink from '@/components/ContentChannelLink.jsx'
+import useContent from '@/hooks/useContent.jsx'
 
-export default function ChannelContentCard({content}) {
+function ChannelContentCard({content}) {
   const {createdAt, countViews} = useContent(content)
 
   return (
@@ -54,3 +54,9 @@ export default function ChannelContentCard({content}) {
     </Box>
   )
 }
+
+ChannelContentCard.propTypes = {
+  content: PropTypes.object,
+}
+
+export default ChannelContentCard

@@ -1,7 +1,8 @@
-import { Link as RouterLink } from 'react-router-dom';
-import Link from '@mui/material/Link';
+import PropTypes from 'prop-types'
+import { Link as RouterLink } from 'react-router-dom'
+import Link from '@mui/material/Link'
 
-export default function ContentChannelLink({ children, content, sx = {} }) {
+function ContentChannelLink({ children, content, sx = {} }) {
   return (
     <Link
       component={RouterLink}
@@ -14,3 +15,11 @@ export default function ContentChannelLink({ children, content, sx = {} }) {
     </Link>
   )
 }
+
+ContentChannelLink.propTypes = {
+  children: PropTypes.node,
+  content: PropTypes.object,
+  sx: PropTypes.object,
+}
+
+export default ContentChannelLink

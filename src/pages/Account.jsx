@@ -1,12 +1,12 @@
 import { Link, Outlet } from 'react-router-dom'
-import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
-import Box from '@mui/material/Box';
-import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import useMatchPath from '@/hooks/useMatchPath.jsx';
+import Grid from '@mui/material/Unstable_Grid2'
+import Typography from '@mui/material/Typography'
+import Tab from '@mui/material/Tab'
+import Tabs from '@mui/material/Tabs'
+import Box from '@mui/material/Box'
+import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined'
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
+import useMatchPath from '@/hooks/useMatchPath.jsx'
 
 export default function Account() {
   const tabs = [

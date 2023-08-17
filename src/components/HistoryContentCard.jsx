@@ -1,9 +1,10 @@
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import useContent from '@/hooks/useContent.jsx';
-import ContentLink from './ContentLink.jsx';
+import PropTypes from 'prop-types'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import ContentLink from '@/components/ContentLink.jsx'
+import useContent from '@/hooks/useContent.jsx'
 
-export default function HistoryContentCard({content}) {
+function HistoryContentCard({content}) {
   const {description, countViews} = useContent(content)
 
   return (
@@ -55,3 +56,9 @@ export default function HistoryContentCard({content}) {
     </ContentLink>
   )
 }
+
+HistoryContentCard.propTypes = {
+  content: PropTypes.object,
+}
+
+export default HistoryContentCard

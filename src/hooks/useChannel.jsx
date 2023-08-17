@@ -1,13 +1,8 @@
-import { useMemo } from 'react';
-import { formatCount } from '@/helpers.js';
+import { formatCount } from '@/utils/helpers.js'
 
 export default function useChannel(channel) {
-  const countSubscribers = useMemo(() => formatCount(channel?.countChannelSubscriptions), [channel?.countChannelSubscriptions])
-
-  const countContents = useMemo(() => formatCount(channel?.countContents), [channel?.countContents])
-
   return {
-    countSubscribers,
-    countContents,
+    countSubscribers: formatCount(channel?.countChannelSubscriptions),
+    countContents: formatCount(channel?.countContents),
   }
 }

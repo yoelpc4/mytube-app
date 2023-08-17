@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import Toolbar from '@mui/material/Toolbar'
 import IconButton from '@mui/material/IconButton'
@@ -25,7 +26,7 @@ const StyledAppBar = styled(MuiAppBar, {
   }),
 }))
 
-export default function AppBar({ open, setOpen }) {
+function AppBar({ open, setOpen }) {
   function onClickToggleDrawer() {
     setOpen(!open)
   }
@@ -64,3 +65,10 @@ export default function AppBar({ open, setOpen }) {
     </StyledAppBar>
   )
 }
+
+AppBar.propTypes = {
+  open: PropTypes.bool,
+  setOpen: PropTypes.func,
+}
+
+export default AppBar

@@ -1,45 +1,30 @@
-import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import Grid from '@mui/material/Unstable_Grid2';
-import Box from '@mui/material/Box';
-import CircularProgress from '@mui/material/CircularProgress';
-import ChannelContentCard from './ChannelContentCard.jsx';
-import { openAlert } from '@/store/alert.js';
-import useGetChannelContents from '@/hooks/useGetChannelContents.jsx';
-import useInfiniteScroll from '@/hooks/useInfiniteScroll.jsx';
+import PropTypes from 'prop-types'
+import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import Grid from '@mui/material/Unstable_Grid2'
+import Box from '@mui/material/Box'
+import CircularProgress from '@mui/material/CircularProgress'
+import { openAlert } from '@/store/alert.js'
+import ChannelContentCard from '@/components/ChannelContentCard.jsx'
+import useInfiniteScroll from '@/hooks/useInfiniteScroll.jsx'
 
-export default function ChannelContentCards({channelId}) {
+function ChannelContentCards({channelId}) {
   const dispatch = useDispatch()
 
-  const {data, total, error, isLoading, onLoadMore} = useGetChannelContents(channelId)
-
-  const [contents, setContents] = useState([])
-
-  const {ref, hasMore} = useInfiniteScroll({
-    records: contents,
-    total,
-    isLoading,
-    onLoadMore,
+  const {ref, records: contents, error, hasMoreRecords} = useInfiniteScroll(`channels/${channelId}/contents`, {
+    take: 12,
   })
-
-  useEffect(() => {
-    setContents(contents.concat(data))
-  }, [data])
 
   useEffect(() => {
     if (!error) {
       return
     }
 
-    if (import.meta.env.DEV) {
-      console.log(error)
-    }
-
     dispatch(openAlert({
       type: 'error',
       message: 'An error occurred while fetching channel contents',
     }))
-  }, [error])
+  }, [dispatch, error])
 
   return (
     <Box
@@ -59,7 +44,13 @@ export default function ChannelContentCards({channelId}) {
         ))}
       </Grid>
 
-      {hasMore && <CircularProgress ref={ref}/>}
+      {hasMoreRecords && <CircularProgress ref={ref}/>}
     </Box>
   )
 }
+
+ChannelContentCards.propTypes = {
+  channelId: PropTypes.number,
+}
+
+export default ChannelContentCards

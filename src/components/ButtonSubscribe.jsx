@@ -1,23 +1,50 @@
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import Button from '@mui/material/Button';
-import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
-import { openAlert } from '@/store/alert.js';
-import { selectUser } from '@/store/auth.js';
-import { transformValidationErrors } from '@/helpers.js';
-import client from '@/utils/client.js';
+import PropTypes from 'prop-types'
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import Button from '@mui/material/Button'
+import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined'
+import { openAlert } from '@/store/alert.js'
+import { selectUser } from '@/store/auth.js'
+import useAsync from '@/hooks/useAsync.jsx'
+import client from '@/utils/client.js'
+import { transformServerErrors } from '@/utils/helpers.js'
 
-export default function ButtonSubscribe({ channel, onSubscribed, onUnsubscribed }) {
+function ButtonSubscribe({channel, onSubscribed, onUnsubscribed}) {
   const dispatch = useDispatch()
-
-  const navigate = useNavigate()
 
   const user = useSelector(selectUser)
 
   const [hasSubscribed, setHasSubscribed] = useState(false)
 
-  const [isLoading, setIsLoading] = useState(false)
+  const {error, isLoading, run} = useAsync()
+
+  const handleToggleSubscription = () => {
+    if (isLoading) {
+      return
+    }
+
+    if (hasSubscribed) {
+      run(
+        client.post(`channels/${channel.id}/unsubscribe`)
+          .then(() => {
+            setHasSubscribed(false)
+
+            onUnsubscribed()
+          })
+      )
+
+      return
+    }
+
+    run(
+      client.post(`channels/${channel.id}/subscribe`)
+        .then(() => {
+          setHasSubscribed(true)
+
+          onSubscribed()
+        })
+    )
+  }
 
   useEffect(() => {
     if (!Array.isArray(channel?.channelSubscriptions) || !channel?.channelSubscriptions.length) {
@@ -25,65 +52,33 @@ export default function ButtonSubscribe({ channel, onSubscribed, onUnsubscribed 
     }
 
     setHasSubscribed(channel.channelSubscriptions[0].subscriberId === user?.id)
-  }, [channel?.channelSubscriptions])
+  }, [channel, user])
 
-  async function onToggleSubscription() {
-    if (isLoading) {
+  useEffect(() => {
+    if (!error) {
       return
     }
 
-    if (!user) {
-      navigate('/login', {
-        state: {
-          from: location.pathname,
-        },
-      })
+    const {response} = error
 
-      return
-    }
-
-    setIsLoading(true)
-
-    try {
-      if (hasSubscribed) {
-        await client.post(`channels/${channel.id}/unsubscribe`)
-
-        setHasSubscribed(false)
-
-        onUnsubscribed()
-      } else {
-        await client.post(`channels/${channel.id}/subscribe`)
-
-        setHasSubscribed(true)
-
-        onSubscribed()
-      }
-    } catch (error) {
-      if (import.meta.env.DEV) {
-        console.log(error)
-      }
-
-      const response = error.response
-
+    if (response) {
       if (response.status === 400) {
-        const errors = transformValidationErrors(response)
+        const errors = transformServerErrors(response.data.errors)
 
         dispatch(openAlert({
           type: 'error',
-          message: `${errors.id}`
+          message: errors.id
         }))
 
         return
       }
-
-      dispatch(openAlert({
-        type: 'error',
-        message: `An error occurred while ${hasSubscribed ? 'unsubscribing' : 'subscribing'}`
-      }))
-    } finally {
-      setIsLoading(false)
     }
-  }
+
+    dispatch(openAlert({
+      type: 'error',
+      message: `An error occurred while ${hasSubscribed ? 'unsubscribing' : 'subscribing'}`
+    }))
+  }, [dispatch, error, hasSubscribed])
 
   return (
     <Button
@@ -97,11 +92,19 @@ export default function ButtonSubscribe({ channel, onSubscribed, onUnsubscribed 
         '&:hover': {
           background: (theme) => hasSubscribed ? theme.palette.grey[300] : theme.palette.grey[900],
         },
-    }}
-      onClick={onToggleSubscription}
+      }}
+      onClick={handleToggleSubscription}
     >
-      {hasSubscribed && <NotificationsOutlinedIcon />}
+      {hasSubscribed && <NotificationsOutlinedIcon/>}
       {hasSubscribed ? 'Subscribed' : 'Subscribe'}
     </Button>
   )
 }
+
+ButtonSubscribe.propTypes = {
+  channel: PropTypes.object,
+  onSubscribed: PropTypes.func,
+  onUnsubscribed: PropTypes.func,
+}
+
+export default ButtonSubscribe

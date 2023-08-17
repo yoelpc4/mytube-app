@@ -1,38 +1,48 @@
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
-import Typography from '@mui/material/Typography';
-import ChannelContentCards from '@/components/ChannelContentCards.jsx';
-import useFindChannel from '@/hooks/useFindChannel.jsx';
-import useChannel from '@/hooks/useChannel.jsx';
-import { openAlert } from '@/store/alert.js';
-import ButtonSubscribe from '@/components/ButtonSubscribe.jsx';
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
+import Box from '@mui/material/Box'
+import Avatar from '@mui/material/Avatar'
+import Typography from '@mui/material/Typography'
+import { openAlert } from '@/store/alert.js'
+import { selectUser } from '@/store/auth.js'
+import ChannelContentCards from '@/components/ChannelContentCards.jsx'
+import ButtonSubscribe from '@/components/ButtonSubscribe.jsx'
+import useAsync from '@/hooks/useAsync.jsx'
+import useChannel from '@/hooks/useChannel.jsx'
+import client from '@/utils/client.js'
 
 export default function Channel() {
   const dispatch = useDispatch()
 
   const {username} = useParams()
 
-  const {data: channel, error, isLoading, setData} = useFindChannel(username)
+  const user = useSelector(selectUser)
+
+  const {data: channel, error, run, setData} = useAsync()
 
   const {countSubscribers, countContents} = useChannel(channel)
+
+  useEffect(() => {
+    const controller = new AbortController()
+
+    run(client.get(`channels/${username}`, {
+      signal: controller.signal,
+    }).then(({data}) => data))
+
+    return () => controller.abort()
+  }, [run, username])
 
   useEffect(() => {
     if (!error) {
       return
     }
 
-    if (import.meta.env.DEV) {
-      console.log(error)
-    }
-
     dispatch(openAlert({
       type: 'error',
       message: 'An error occurred while fetching channel',
     }))
-  }, [error])
+  }, [dispatch, error])
 
   function onSubscribed() {
     setData({
@@ -59,7 +69,7 @@ export default function Channel() {
       />
 
       <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', mx: 6}}>
-        <Box sx={{ display: 'flex', alignItems: 'center', columnGap: 2 }}>
+        <Box sx={{display: 'flex', alignItems: 'center', columnGap: 2}}>
           <Avatar alt="avatar" src="https://i.pravatar.cc/200" sx={{width: 120, height: 120}}/>
 
           <Box>
@@ -73,7 +83,9 @@ export default function Channel() {
           </Box>
         </Box>
 
-        <ButtonSubscribe channel={channel} onSubscribed={onSubscribed} onUnsubscribed={onUnsubscribed}/>
+        {user.id !== channel.id && (
+          <ButtonSubscribe channel={channel} onSubscribed={onSubscribed} onUnsubscribed={onUnsubscribed}/>
+        )}
       </Box>
 
       <ChannelContentCards channelId={channel.id}/>

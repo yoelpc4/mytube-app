@@ -1,4 +1,4 @@
-import { matchPath, useLocation } from 'react-router-dom';
+import { matchPath, useLocation } from 'react-router-dom'
 
 export default function useMatchPath(patterns) {
   const {pathname} = useLocation()

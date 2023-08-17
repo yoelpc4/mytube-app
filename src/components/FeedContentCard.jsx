@@ -1,11 +1,12 @@
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Avatar from '@mui/material/Avatar';
-import useContent from '@/hooks/useContent.jsx';
-import ContentLink from './ContentLink.jsx';
-import ContentChannelLink from './ContentChannelLink.jsx';
+import PropTypes from 'prop-types'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import Avatar from '@mui/material/Avatar'
+import ContentLink from '@/components/ContentLink.jsx'
+import ContentChannelLink from '@/components/ContentChannelLink.jsx'
+import useContent from '@/hooks/useContent.jsx'
 
-export default function FeedContentCard({content}) {
+function FeedContentCard({content}) {
   const {createdAt, countViews} = useContent(content)
 
   return (
@@ -58,3 +59,9 @@ export default function FeedContentCard({content}) {
     </Box>
   )
 }
+
+FeedContentCard.propTypes = {
+  content: PropTypes.object,
+}
+
+export default FeedContentCard

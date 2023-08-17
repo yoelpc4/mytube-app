@@ -1,17 +1,19 @@
+import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link as RouterLink, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import Avatar from '@mui/material/Avatar'
-import LoadingButton from '@mui/lab/LoadingButton';
+import LoadingButton from '@mui/lab/LoadingButton'
 import TextField from '@mui/material/TextField'
 import Link from '@mui/material/Link'
 import Grid from '@mui/material/Grid'
 import Box from '@mui/material/Box'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
-import useForm from '@/hooks/useForm.jsx';
 import { setUser } from '@/store/auth.js'
 import { openAlert } from '@/store/alert.js'
-import client from '@/utils/client.js';
+import useAsync from '@/hooks/useAsync.jsx'
+import useForm from '@/hooks/useForm.jsx'
+import client from '@/utils/client.js'
 
 export default function Login() {
   const dispatch = useDispatch()
@@ -22,50 +24,71 @@ export default function Login() {
 
   const [searchParams] = useSearchParams()
 
-  const redirect = searchParams.get('redirect')
+  const {data, error, isLoading, run} = useAsync()
 
-  const {form, errors, isLoading, setErrors, handleInput, handleSubmit} = useForm({
-    data: {
-      username: '',
-      password: '',
-    },
-    handleSuccess,
-    handleError,
+  const {inputs, errors, setErrors, handleInput, handleSubmit, handleServerErrors} = useForm({
+    username: '',
+    password: '',
   })
 
-  async function handleSuccess() {
-    await client.post('auth/login', form)
+  const submit = () => {
+    if (isLoading) {
+      return
+    }
 
-    const {data} = await client.get('auth/user')
+    run(client.post('auth/login', {
+      username: inputs.username,
+      password: inputs.password,
+    }).then(({data}) => data))
+  }
 
-    dispatch(setUser(data))
+  useEffect(() => {
+    if (!data) {
+      return
+    }
 
-    if (redirect) {
-      window.location.replace(redirect)
+    if (searchParams.has('redirect')) {
+      window.location.replace(searchParams.get('redirect'))
 
       return
     }
 
+    dispatch(setUser(data))
+
     navigate(state.from ?? '/')
-  }
+  }, [dispatch, navigate, state, searchParams, data])
 
-  function handleError(response) {
-    if (response.status === 401) {
-      setErrors({
-        username: 'The given credentials are incorrect',
-      })
-
+  useEffect(() => {
+    if (!error) {
       return
+    }
+
+    const {response} = error
+
+    if (response) {
+      if (response.status === 400) {
+        handleServerErrors(response.data.errors)
+
+        return
+      }
+
+      if (response.status === 401) {
+        setErrors({
+          username: 'The given credentials are incorrect',
+        })
+
+        return
+      }
     }
 
     dispatch(openAlert({
       type: 'error',
-      message: 'An error occurred while log in'
+      message: 'An error occurred while log in',
     }))
-  }
+  }, [dispatch, error, setErrors, handleServerErrors])
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
       <Avatar sx={{m: 1, bgcolor: 'primary.main'}}>
         <LockOutlinedIcon/>
       </Avatar>
@@ -74,7 +97,7 @@ export default function Login() {
         Login
       </Typography>
 
-      <Box component="form" id="login-form" sx={{mt: 1}} onSubmit={handleSubmit}>
+      <Box component="form" id="login-form" sx={{mt: 1}} onSubmit={handleSubmit(submit)}>
         <TextField
           id="username"
           name="username"
@@ -83,7 +106,7 @@ export default function Login() {
           fullWidth
           autoFocus
           margin="normal"
-          value={form.username}
+          value={inputs.username}
           error={!!errors.username}
           helperText={errors.username}
           onInput={handleInput}
@@ -97,7 +120,7 @@ export default function Login() {
           margin="normal"
           required
           fullWidth
-          value={form.password}
+          value={inputs.password}
           error={!!errors.password}
           helperText={errors.password}
           onInput={handleInput}
@@ -118,7 +141,7 @@ export default function Login() {
         <Grid container justifyContent="flex-end">
           <Grid item>
             <Link component={RouterLink} to="/register" variant="body2">
-              Don't have an account? Register here
+              Don&apos;t have an account? Register here
             </Link>
           </Grid>
         </Grid>

@@ -1,5 +1,5 @@
-import axios from 'axios';
-import nprogress from 'nprogress';
+import axios from 'axios'
+import nprogress from 'nprogress'
 
 const client = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
@@ -38,7 +38,7 @@ const rejectResponse = async error => {
 
     const {config, response} = error
 
-    if (!config.isRetried && response.status === 403 && response.data.message === 'Invalid CSRF token') {
+    if (!config.isRetried && response && response.status === 403 && response.data.message === 'Invalid CSRF token') {
         config.isRetried = true
 
         try {
