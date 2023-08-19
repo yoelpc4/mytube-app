@@ -13,6 +13,8 @@ import Register from '@/pages/Register.jsx'
 import Account from '@/pages/Account.jsx'
 import EditProfile from '@/pages/EditProfile.jsx'
 import EditPassword from '@/pages/EditPassword.jsx'
+import ForgotPassword from '@/pages/ForgotPassword.jsx';
+import ResetPassword from '@/pages/ResetPassword.jsx';
 
 const router = createBrowserRouter([
   {
@@ -31,6 +33,14 @@ const router = createBrowserRouter([
               {
                 path: '/login',
                 element: <Login/>,
+              },
+              {
+                path: '/forgot-password',
+                element: <ForgotPassword/>,
+              },
+              {
+                path: '/reset-password',
+                element: <ResetPassword/>,
               },
             ],
           },

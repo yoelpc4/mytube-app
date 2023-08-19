@@ -1,34 +1,32 @@
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { Link as RouterLink, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import { Navigate, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import Avatar from '@mui/material/Avatar'
 import LoadingButton from '@mui/lab/LoadingButton'
 import TextField from '@mui/material/TextField'
-import Link from '@mui/material/Link'
-import Grid from '@mui/material/Unstable_Grid2'
 import Box from '@mui/material/Box'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
-import { setUser } from '@/store/auth.js'
 import { openAlert } from '@/store/alert.js'
 import useAsync from '@/hooks/useAsync.jsx'
 import useForm from '@/hooks/useForm.jsx'
 import client from '@/utils/client.js'
 
-export default function Login() {
+export default function ResetPassword() {
   const dispatch = useDispatch()
 
   const navigate = useNavigate()
 
-  const {state} = useLocation()
+  const location = useLocation()
 
   const [searchParams] = useSearchParams()
 
-  const {data, error, isLoading, run} = useAsync()
+  const {error, isLoading, isSuccess, run} = useAsync()
 
   const {inputs, errors, setErrors, handleInput, handleSubmit, handleServerErrors} = useForm({
-    username: '',
+    email: searchParams.get('email'),
     password: '',
+    passwordConfirmation: '',
   })
 
   const submit = () => {
@@ -36,27 +34,26 @@ export default function Login() {
       return
     }
 
-    run(client.post('auth/login', {
-      username: inputs.username,
+    run(client.post('auth/reset-password', {
+      token: searchParams.get('token'),
+      email: searchParams.get('email'),
       password: inputs.password,
+      passwordConfirmation: inputs.passwordConfirmation,
     }).then(({data}) => data))
   }
 
   useEffect(() => {
-    if (!data) {
+    if (!isSuccess) {
       return
     }
 
-    if (searchParams.has('redirect')) {
-      window.location.replace(searchParams.get('redirect'))
+    dispatch(openAlert({
+      type: 'success',
+      message: 'Password has been reset',
+    }))
 
-      return
-    }
-
-    dispatch(setUser(data))
-
-    navigate(state.from ?? '/')
-  }, [dispatch, navigate, state, searchParams, data])
+    navigate('/login')
+  }, [dispatch, navigate, isSuccess])
 
   useEffect(() => {
     if (!error) {
@@ -71,21 +68,17 @@ export default function Login() {
 
         return
       }
-
-      if (response.status === 401) {
-        setErrors({
-          username: 'The given credentials are incorrect',
-        })
-
-        return
-      }
     }
 
     dispatch(openAlert({
       type: 'error',
-      message: 'An error occurred while logging in',
+      message: 'An error occurred while resetting password',
     }))
   }, [dispatch, error, setErrors, handleServerErrors])
+
+  if (!searchParams.has('token') || !searchParams.has('email')) {
+    return <Navigate to="/login" state={{ from: location }} replace />
+  }
 
   return (
     <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
@@ -94,26 +87,27 @@ export default function Login() {
       </Avatar>
 
       <Typography component="h1" variant="h5">
-        Login
+        Reset Password
       </Typography>
 
       <Box
         component="form"
-        id="login-form"
+        id="reset-password-form"
         sx={{mt: 1, width: '100%', maxWidth: '400px'}}
         onSubmit={handleSubmit(submit)}
       >
         <TextField
-          id="username"
-          name="username"
-          label="Username"
-          required
-          fullWidth
-          autoFocus
+          id="email"
+          name="email"
+          type="email"
+          label="Email"
           margin="normal"
-          value={inputs.username}
-          error={!!errors.username}
-          helperText={errors.username}
+          required
+          disabled
+          fullWidth
+          value={inputs.email}
+          error={!!errors.email}
+          helperText={errors.email}
           onInput={handleInput}
         />
 
@@ -124,6 +118,7 @@ export default function Login() {
           label="Password"
           margin="normal"
           required
+          autoFocus
           fullWidth
           value={inputs.password}
           error={!!errors.password}
@@ -131,31 +126,31 @@ export default function Login() {
           onInput={handleInput}
         />
 
+        <TextField
+          id="password-confirmation"
+          name="passwordConfirmation"
+          type="password"
+          label="Password Confirmation"
+          margin="normal"
+          required
+          fullWidth
+          value={inputs.passwordConfirmation}
+          error={!!errors.passwordConfirmation}
+          helperText={errors.passwordConfirmation}
+          onInput={handleInput}
+        />
+
         <LoadingButton
           type="submit"
-          form="login-form"
+          form="reset-password-form"
           fullWidth
           variant="contained"
           loading={isLoading}
           disabled={isLoading}
           sx={{mt: 3, mb: 2}}
         >
-          <span>Login</span>
+          <span>Reset</span>
         </LoadingButton>
-
-        <Grid container justifyContent="center" spacing={1}>
-          <Grid item xs={12} sx={{ textAlign: 'center' }}>
-            <Link component={RouterLink} to="/register" variant="body2">
-              Don&apos;t have an account? Register here
-            </Link>
-          </Grid>
-
-          <Grid item xs={12} sx={{ textAlign: 'center' }}>
-            <Link component={RouterLink} to="/forgot-password" variant="body2">
-              Forgot password
-            </Link>
-          </Grid>
-        </Grid>
       </Box>
     </Box>
   )

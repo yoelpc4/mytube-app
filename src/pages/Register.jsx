@@ -4,7 +4,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import Avatar from '@mui/material/Avatar'
 import LoadingButton from '@mui/lab/LoadingButton'
 import TextField from '@mui/material/TextField'
-import Grid from '@mui/material/Grid'
+import Grid from '@mui/material/Unstable_Grid2'
 import Link from '@mui/material/Link'
 import Box from '@mui/material/Box'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
@@ -79,7 +79,12 @@ export default function Register() {
         Register
       </Typography>
 
-      <Box component="form" id="register-form" sx={{mt: 1}} onSubmit={handleSubmit(submit)}>
+      <Box
+        component="form"
+        id="register-form"
+        sx={{mt: 1, width: '100%', maxWidth: '400px'}}
+        onSubmit={handleSubmit(submit)}
+      >
         <TextField
           id="name"
           name="name"
@@ -159,8 +164,8 @@ export default function Register() {
           <span>Register</span>
         </LoadingButton>
 
-        <Grid container justifyContent="flex-end">
-          <Grid item>
+        <Grid container justifyContent="center">
+          <Grid item xs={12} sx={{ textAlign: 'center' }}>
             <Link component={RouterLink} to="/login" variant="body2">
               Already have an account? Login here
             </Link>
