@@ -11,8 +11,8 @@ import Login from '@/pages/Login.jsx'
 import Home from '@/pages/Home.jsx'
 import Register from '@/pages/Register.jsx'
 import Account from '@/pages/Account.jsx'
-import EditProfile from '@/pages/EditProfile.jsx'
-import EditPassword from '@/pages/EditPassword.jsx'
+import UpdateProfile from '@/pages/UpdateProfile.jsx'
+import UpdatePassword from '@/pages/UpdatePassword.jsx'
 import ForgotPassword from '@/pages/ForgotPassword.jsx';
 import ResetPassword from '@/pages/ResetPassword.jsx';
 
@@ -62,11 +62,11 @@ const router = createBrowserRouter([
                 children: [
                   {
                     path: '',
-                    element: <EditProfile />,
+                    element: <UpdateProfile />,
                   },
                   {
                     path: 'password',
-                    element: <EditPassword />,
+                    element: <UpdatePassword />,
                   },
                 ],
               },

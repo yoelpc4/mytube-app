@@ -10,7 +10,7 @@ import useAsync from '@/hooks/useAsync.jsx'
 import useForm from '@/hooks/useForm.jsx'
 import client from '@/utils/client.js'
 
-export default function EditPassword() {
+export default function UpdatePassword() {
   const dispatch = useDispatch()
 
   const {error, isLoading, isSuccess, run} = useAsync()
@@ -67,12 +67,12 @@ export default function EditPassword() {
     <Grid container spacing={2} maxWidth="xl">
       <Grid xs={12}>
         <Typography component="h2" variant="h5" sx={{fontWeight: 500}}>
-          Edit Password
+          Update Password
         </Typography>
       </Grid>
 
       <Grid xs={12} md={6}>
-        <Box component="form" id="edit-password-form" sx={{mt: 1}} onSubmit={handleSubmit(submit)}>
+        <Box component="form" id="update-password-form" sx={{mt: 1}} onSubmit={handleSubmit(submit)}>
           <TextField
             id="currentPassword"
             name="currentPassword"
@@ -119,7 +119,7 @@ export default function EditPassword() {
           <Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
             <LoadingButton
               type="submit"
-              form="edit-password-form"
+              form="update-password-form"
               variant="contained"
               loading={isLoading}
               disabled={isLoading}

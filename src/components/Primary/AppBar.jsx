@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import { Link as RouterLink, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import Toolbar from '@mui/material/Toolbar'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
@@ -66,7 +66,7 @@ function AppBar({open, setOpen}) {
           <AvatarButtonPopover/>
         ) : (
           <Button
-            component={RouterLink}
+            component={Link}
             to="/login"
             variant="outlined"
             startIcon={<AccountCircleOutlinedIcon/>}

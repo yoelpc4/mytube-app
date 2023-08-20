@@ -11,7 +11,7 @@ import useAsync from '@/hooks/useAsync.jsx'
 import useForm from '@/hooks/useForm.jsx'
 import client from '@/utils/client.js'
 
-export default function EditProfile() {
+export default function UpdateProfile() {
   const dispatch = useDispatch()
 
   const user = useSelector(selectUser)
@@ -70,12 +70,12 @@ export default function EditProfile() {
     <Grid container spacing={2} maxWidth="xl">
       <Grid xs={12}>
         <Typography component="h2" variant="h5" sx={{fontWeight: 500}}>
-          Edit Profile
+          Update Profile
         </Typography>
       </Grid>
 
       <Grid xs={12} md={6}>
-        <Box component="form" id="edit-profile-form" sx={{mt: 1}} onSubmit={handleSubmit(submit)}>
+        <Box component="form" id="update-profile-form" sx={{mt: 1}} onSubmit={handleSubmit(submit)}>
           <TextField
             id="username"
             name="username"
@@ -122,7 +122,7 @@ export default function EditProfile() {
           <Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
             <LoadingButton
               type="submit"
-              form="edit-profile-form"
+              form="update-profile-form"
               variant="contained"
               loading={isLoading}
               disabled={isLoading}
