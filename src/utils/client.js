@@ -38,17 +38,31 @@ const rejectResponse = async error => {
 
     const {config, response} = error
 
-    if (!config.isRetried && response && response.status === 403 && response.data.message === 'Invalid CSRF token') {
-        config.isRetried = true
+    if (response && (!config.retry || config.retry < 2)) {
+        config.retry = (config.retry ?? 0) + 1
 
-        try {
-            const {data} = await client.get('csrf-token')
+        if (response.status === 401 && config.url !== 'auth/refresh') {
+            try {
+                await client.post('auth/refresh', null, {
+                    retry: config.retry,
+                })
 
-            client.defaults.headers.common['x-csrf-token'] = config.headers['x-csrf-token'] = data.csrfToken
+                return client(config)
+            } catch {
+                // no-op
+            }
+        } else if (response.status === 403 && response.data.message === 'Invalid CSRF token') {
+            try {
+                const {data} = await client.get('csrf-token', {
+                    retry: config.retry,
+                })
 
-            return client(config)
-        } catch {
-            // no-op
+                client.defaults.headers.common['x-csrf-token'] = config.headers['x-csrf-token'] = data.csrfToken
+
+                return client(config)
+            } catch {
+                // no-op
+            }
         }
     }
 
