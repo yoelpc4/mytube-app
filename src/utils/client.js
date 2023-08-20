@@ -1,5 +1,7 @@
 import axios from 'axios'
 import nprogress from 'nprogress'
+import store from '@/store';
+import { unsetUser } from '@/store/auth.js';
 
 const client = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
@@ -41,7 +43,13 @@ const rejectResponse = async error => {
     if (response && (!config.retry || config.retry < 2)) {
         config.retry = (config.retry ?? 0) + 1
 
-        if (response.status === 401 && config.url !== 'auth/refresh') {
+        if (response.status === 401) {
+            if (config.url === 'auth/refresh'){
+                store.dispatch(unsetUser())
+
+                return Promise.reject(error)
+            }
+
             try {
                 await client.post('auth/refresh', null, {
                     retry: config.retry,

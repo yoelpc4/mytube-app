@@ -55,7 +55,7 @@ export default function Login() {
 
     dispatch(setUser(data))
 
-    navigate(state.from ?? '/')
+    navigate(state ? state.from : '/')
   }, [dispatch, navigate, state, searchParams, data])
 
   useEffect(() => {
