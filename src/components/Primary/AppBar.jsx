@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types'
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom'
 import Toolbar from '@mui/material/Toolbar'
 import IconButton from '@mui/material/IconButton'
@@ -10,7 +11,6 @@ import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined.js'
 import AvatarButtonPopover from '@/components/AvatarButtonPopover.jsx'
 import Button from '@mui/material/Button';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
-import { useSelector } from 'react-redux';
 import { selectUser } from '@/store/auth.js';
 
 const StyledAppBar = styled(MuiAppBar, {
@@ -30,18 +30,18 @@ const StyledAppBar = styled(MuiAppBar, {
   }),
 }))
 
-function AppBar({open, setOpen}) {
+function AppBar({isOpen, toggleIsOpen}) {
   const user = useSelector(selectUser)
 
   return (
-    <StyledAppBar elevation={0} position="fixed" open={open}>
+    <StyledAppBar elevation={0} position="fixed" open={isOpen}>
       <Toolbar>
         <IconButton
           edge="start"
           color="inherit"
           aria-label="toggle drawer"
           sx={{marginRight: '16px'}}
-          onClick={() => setOpen(!open)}
+          onClick={toggleIsOpen}
         >
           <MenuOutlinedIcon sx={{color: '#000'}}/>
         </IconButton>
@@ -62,9 +62,7 @@ function AppBar({open, setOpen}) {
 
         <div style={{flexGrow: 1}}></div>
 
-        {user ? (
-          <AvatarButtonPopover/>
-        ) : (
+        {user ? <AvatarButtonPopover/> : (
           <Button
             component={Link}
             to="/login"
@@ -81,8 +79,8 @@ function AppBar({open, setOpen}) {
 }
 
 AppBar.propTypes = {
-  open: PropTypes.bool,
-  setOpen: PropTypes.func,
+  isOpen: PropTypes.bool,
+  toggleIsOpen: PropTypes.func,
 }
 
 export default AppBar

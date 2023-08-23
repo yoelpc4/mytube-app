@@ -7,8 +7,8 @@ import HomeIcon from '@mui/icons-material/Home'
 import HistoryIcon from '@mui/icons-material/History'
 import DrawerListItemButton from '@/components/DrawerListItemButton.jsx'
 
-const StyledDrawer = styled(MuiDrawer, { shouldForwardProp: prop => prop !== 'open' })(
-  ({ theme, open }) => ({
+const StyledDrawer = styled(MuiDrawer, {shouldForwardProp: prop => prop !== 'open'})(
+  ({theme, open}) => ({
     '& .MuiDrawer-paper': {
       position: 'relative',
       whiteSpace: 'nowrap',
@@ -47,13 +47,13 @@ const routes = [
   },
 ]
 
-function Drawer({ open }) {
+function Drawer({isOpen}) {
   return (
-    <StyledDrawer variant="permanent" open={open} sx={{ pt: 8 }}>
+    <StyledDrawer variant="permanent" open={isOpen} sx={{pt: 8}}>
       <List component="nav">
         {routes.map((route, index) => (
-          <ListItem key={index} disablePadding sx={{ display: 'block' }}>
-            <DrawerListItemButton open={open} route={route} />
+          <ListItem key={index} disablePadding sx={{display: 'block'}}>
+            <DrawerListItemButton isOpen={isOpen} route={route} />
           </ListItem>
         ))}
       </List>
@@ -62,7 +62,7 @@ function Drawer({ open }) {
 }
 
 Drawer.propTypes = {
-  open: PropTypes.bool,
+  isOpen: PropTypes.bool,
 }
 
 export default Drawer

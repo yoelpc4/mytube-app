@@ -17,7 +17,6 @@ import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
 import ListItemLogout from '@/components/ListItemLogout.jsx';
 import { selectUser } from '@/store/auth.js';
-import Typography from '@mui/material/Typography';
 
 export default function AvatarButtonPopover() {
   const [anchorEl, setAnchorEl] = useState(null)
@@ -61,13 +60,13 @@ export default function AvatarButtonPopover() {
                   primary={user.name}
                   secondary={
                     <>
-                      <Typography variant="body2" sx={{color: '#000', mb: '5px'}}>
+                      <span style={{display: 'block', color: '#000', marginBottom: '5px'}}>
                         @{user.username}
-                      </Typography>
+                      </span>
 
                       <RouterLink
                         to="/account"
-                        style={{textDecoration: 'none'}}
+                        style={{display: 'block', textDecoration: 'none'}}
                         onClick={handleClose}
                       >
                         Manage your account

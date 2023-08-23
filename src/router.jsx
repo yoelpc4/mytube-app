@@ -1,7 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom'
 import App from '@/App.jsx'
 import Auth from '@/middlewares/Auth.jsx'
-import Guest from '@/middlewares/Guest.jsx'
 import Primary from '@/layouts/Primary.jsx'
 import Secondary from '@/layouts/Secondary.jsx'
 import Channel from '@/pages/Channel.jsx'
@@ -15,34 +14,30 @@ import UpdateProfile from '@/pages/UpdateProfile.jsx'
 import UpdatePassword from '@/pages/UpdatePassword.jsx'
 import ForgotPassword from '@/pages/ForgotPassword.jsx';
 import ResetPassword from '@/pages/ResetPassword.jsx';
+import NotFound from '@/pages/NotFound.jsx';
 
 const router = createBrowserRouter([
   {
     element: <App/>,
     children: [
       {
-        element: <Guest/>,
+        element: <Secondary/>,
         children: [
           {
-            element: <Secondary/>,
-            children: [
-              {
-                path: '/register',
-                element: <Register/>,
-              },
-              {
-                path: '/login',
-                element: <Login/>,
-              },
-              {
-                path: '/forgot-password',
-                element: <ForgotPassword/>,
-              },
-              {
-                path: '/reset-password',
-                element: <ResetPassword/>,
-              },
-            ],
+            path: '/register',
+            element: <Register/>,
+          },
+          {
+            path: '/login',
+            element: <Login/>,
+          },
+          {
+            path: '/forgot-password',
+            element: <ForgotPassword/>,
+          },
+          {
+            path: '/reset-password',
+            element: <ResetPassword/>,
           },
         ],
       },
@@ -61,19 +56,19 @@ const router = createBrowserRouter([
                 element: <Account/>,
                 children: [
                   {
-                    path: '',
-                    element: <UpdateProfile />,
+                    index: true,
+                    element: <UpdateProfile/>,
                   },
                   {
                     path: 'password',
-                    element: <UpdatePassword />,
+                    element: <UpdatePassword/>,
                   },
                 ],
               },
             ],
           },
           {
-            path: '/',
+            index: true,
             element: <Home/>,
           },
           {
@@ -83,6 +78,10 @@ const router = createBrowserRouter([
           {
             path: '/channel/:username',
             element: <Channel/>,
+          },
+          {
+            path: '*',
+            element: <NotFound/>,
           },
         ],
       },
