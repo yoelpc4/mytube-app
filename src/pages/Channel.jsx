@@ -1,13 +1,12 @@
 import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import Box from '@mui/material/Box'
 import Avatar from '@mui/material/Avatar'
 import Typography from '@mui/material/Typography'
 import { openAlert } from '@/store/alert.js'
-import { selectUser } from '@/store/auth.js'
 import ChannelContentCards from '@/components/ChannelContentCards.jsx'
-import ButtonSubscribe from '@/components/ButtonSubscribe.jsx'
+import ButtonSubscription from '@/components/ButtonSubscription.jsx'
 import useAsync from '@/hooks/useAsync.jsx'
 import useChannel from '@/hooks/useChannel.jsx'
 import client from '@/utils/client.js'
@@ -17,11 +16,17 @@ export default function Channel() {
 
   const {username} = useParams()
 
-  const user = useSelector(selectUser)
+  const {data, error, run} = useAsync()
 
-  const {data: channel, error, run, setData} = useAsync()
-
-  const {countSubscribers, countContents} = useChannel(channel)
+  const {
+    channel,
+    hasSubscribed,
+    subscribersCount,
+    contentsCount,
+    setChannel,
+    handleSubscribed,
+    handleUnsubscribed,
+  } = useChannel()
 
   useEffect(() => {
     const controller = new AbortController()
@@ -34,6 +39,14 @@ export default function Channel() {
   }, [run, username])
 
   useEffect(() => {
+    if (!data) {
+      return
+    }
+
+    setChannel(data)
+  }, [data, setChannel])
+
+  useEffect(() => {
     if (!error) {
       return
     }
@@ -43,20 +56,6 @@ export default function Channel() {
       message: 'An error occurred while fetching channel',
     }))
   }, [dispatch, error])
-
-  function onSubscribed() {
-    setData({
-      ...channel,
-      countChannelSubscriptions: channel.countChannelSubscriptions + 1,
-    })
-  }
-
-  function onUnsubscribed() {
-    setData({
-      ...channel,
-      countChannelSubscriptions: channel.countChannelSubscriptions - 1,
-    })
-  }
 
   return channel && (
     <Box sx={{display: 'flex', flexDirection: 'column', rowGap: 3}}>
@@ -78,14 +77,17 @@ export default function Channel() {
             </Typography>
 
             <Typography>
-              <strong>@{channel.username}</strong> {countSubscribers || 'No'} subscriber{countSubscribers === 1 ? '' : 's'} {countContents || 'No'} video{countContents === 1 ? '' : 's'}
+              <strong>@{channel.username}</strong> {subscribersCount || 'No'} subscriber{subscribersCount === 1 ? '' : 's'} {contentsCount || 'No'} video{contentsCount === 1 ? '' : 's'}
             </Typography>
           </Box>
         </Box>
 
-        {user.id !== channel.id && (
-          <ButtonSubscribe channel={channel} onSubscribed={onSubscribed} onUnsubscribed={onUnsubscribed}/>
-        )}
+        <ButtonSubscription
+          channel={channel}
+          hasSubscribed={hasSubscribed}
+          onSubscribed={handleSubscribed}
+          onUnsubscribed={handleUnsubscribed}
+        />
       </Box>
 
       <ChannelContentCards channelId={channel.id}/>

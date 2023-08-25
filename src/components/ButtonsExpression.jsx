@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import { useState } from 'react'
+import { useEffect, useReducer } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
 import Box from '@mui/material/Box'
@@ -10,13 +10,14 @@ import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined'
 import Button from '@mui/material/Button'
 import { openAlert } from '@/store/alert.js'
 import { selectUser } from '@/store/auth.js'
+import useAsync from '@/hooks/useAsync.jsx';
 import client from '@/utils/client.js'
 
-function LikeDislikeButtons(
+function ButtonsExpression(
   {
     contentId,
-    countLikes,
-    countDislikes,
+    likesCount,
+    dislikesCount,
     isLiked,
     isDisliked,
     onLiked,
@@ -31,9 +32,26 @@ function LikeDislikeButtons(
 
   const user = useSelector(selectUser)
 
-  const [isLoading, setIsLoading] = useState(false)
+  const {error, isLoading, isSuccess, run} = useAsync()
 
-  async function onLike() {
+  const [state, setState] = useReducer((state, action) => {
+    switch (action) {
+      case 'like':
+        return {
+          acting: 'liking',
+          callback: onLiked,
+        }
+      case 'dislike':
+        return {
+          acting: 'disliking',
+          callback: onDisliked,
+        }
+      default:
+        throw new Error('Unsupported action')
+    }
+  },null)
+
+  const handleLike = async () => {
     if (isLoading) {
       return
     }
@@ -48,27 +66,12 @@ function LikeDislikeButtons(
       return
     }
 
-    setIsLoading(true)
+    setState('like')
 
-    try {
-      await client.post(`contents/${contentId}/like`)
-
-      onLiked()
-    } catch (error) {
-      if (import.meta.env.DEV) {
-        console.log(error)
-      }
-
-      dispatch(openAlert({
-        type: 'error',
-        message: 'An error occurred while liking content'
-      }))
-    } finally {
-      setIsLoading(false)
-    }
+    run(client.post(`contents/${contentId}/like`))
   }
 
-  async function onDislike() {
+  const handleDislike = async () => {
     if (isLoading) {
       return
     }
@@ -83,25 +86,29 @@ function LikeDislikeButtons(
       return
     }
 
-    setIsLoading(true)
+    setState('dislike')
 
-    try {
-      await client.get(`contents/${contentId}/dislike`)
-
-      onDisliked()
-    } catch (error) {
-      if (import.meta.env.DEV) {
-        console.log(error)
-      }
-
-      dispatch(openAlert({
-        type: 'error',
-        message: 'An error occurred while disliking content'
-      }))
-    } finally {
-      setIsLoading(false)
-    }
+    run(client.post(`contents/${contentId}/dislike`))
   }
+
+  useEffect(() => {
+    if (!isSuccess) {
+      return
+    }
+
+    state.callback()
+  }, [isSuccess, state])
+
+  useEffect(() => {
+    if (!error) {
+      return
+    }
+
+    dispatch(openAlert({
+      type: 'error',
+      message: `An error occurred while ${state.acting}`,
+    }))
+  }, [dispatch, error, state])
 
   return (
     <Box sx={{display: 'flex'}}>
@@ -121,13 +128,13 @@ function LikeDislikeButtons(
             background: (theme) => theme.palette.grey[300],
           },
         }}
-        onClick={onLike}
+        onClick={handleLike}
       >
         {isLiked && <ThumbUpIcon/>}
 
         {!isLiked && <ThumbUpOutlinedIcon/>}
 
-        {countLikes > 0 ? countLikes : ''}
+        {likesCount > 0 ? likesCount : ''}
       </Button>
 
       <Button
@@ -145,26 +152,26 @@ function LikeDislikeButtons(
             background: (theme) => theme.palette.grey[300],
           },
         }}
-        onClick={onDislike}
+        onClick={handleDislike}
       >
         {isDisliked && <ThumbDownIcon/>}
 
         {!isDisliked && <ThumbDownOutlinedIcon/>}
 
-        {countDislikes > 0 ? countDislikes : ''}
+        {dislikesCount > 0 ? dislikesCount : ''}
       </Button>
     </Box>
   )
 }
 
-LikeDislikeButtons.propTypes = {
+ButtonsExpression.propTypes = {
   contentId: PropTypes.number,
-  countLikes: PropTypes.number,
-  countDislikes: PropTypes.number,
+  likesCount: PropTypes.number,
+  dislikesCount: PropTypes.number,
   isLiked: PropTypes.bool,
   isDisliked: PropTypes.bool,
   onLiked: PropTypes.func,
   onDisliked: PropTypes.func,
 }
 
-export default LikeDislikeButtons
+export default ButtonsExpression

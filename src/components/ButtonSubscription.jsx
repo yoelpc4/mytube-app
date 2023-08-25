@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types'
-import { useEffect, useState } from 'react'
+import { useEffect, useReducer } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button'
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined'
 import { openAlert } from '@/store/alert.js'
@@ -9,50 +10,61 @@ import useAsync from '@/hooks/useAsync.jsx'
 import client from '@/utils/client.js'
 import { transformServerErrors } from '@/utils/helpers.js'
 
-function ButtonSubscribe({channel, onSubscribed, onUnsubscribed}) {
+function ButtonSubscription({channel, hasSubscribed, onSubscribed, onUnsubscribed}) {
   const dispatch = useDispatch()
+
+  const navigate = useNavigate()
 
   const user = useSelector(selectUser)
 
-  const [hasSubscribed, setHasSubscribed] = useState(false)
+  const {error, isLoading, isSuccess, run} = useAsync()
 
-  const {error, isLoading, run} = useAsync()
+  const [state, setState] = useReducer((state, action) => {
+    switch (action) {
+      case 'subscribe':
+        return {
+          acting: 'subscribing',
+          callback: onSubscribed,
+        }
+      case 'unsubscribe':
+        return {
+          acting: 'unsubscribing',
+          callback: onUnsubscribed,
+        }
+      default:
+        throw new Error('Unsupported action')
+    }
+  },null)
 
   const handleToggleSubscription = () => {
+    if (!user) {
+      navigate('/login', {
+        state: {
+          from: location.pathname,
+        },
+      })
+
+      return
+    }
+
     if (isLoading) {
       return
     }
 
-    if (hasSubscribed) {
-      run(
-        client.post(`channels/${channel.id}/unsubscribe`)
-          .then(() => {
-            setHasSubscribed(false)
+    const action = hasSubscribed ? 'unsubscribe' : 'subscribe'
 
-            onUnsubscribed()
-          })
-      )
+    setState(action)
 
-      return
-    }
-
-    run(
-      client.post(`channels/${channel.id}/subscribe`)
-        .then(() => {
-          setHasSubscribed(true)
-
-          onSubscribed()
-        })
-    )
+    run(client.post(`channels/${channel.id}/${action}`))
   }
 
   useEffect(() => {
-    if (!Array.isArray(channel?.channelSubscriptions) || !channel?.channelSubscriptions.length) {
+    if (!isSuccess) {
       return
     }
 
-    setHasSubscribed(channel.channelSubscriptions[0].subscriberId === user?.id)
-  }, [channel, user])
+    state.callback()
+  }, [isSuccess, state])
 
   useEffect(() => {
     if (!error) {
@@ -76,11 +88,11 @@ function ButtonSubscribe({channel, onSubscribed, onUnsubscribed}) {
 
     dispatch(openAlert({
       type: 'error',
-      message: `An error occurred while ${hasSubscribed ? 'unsubscribing' : 'subscribing'}`
+      message: `An error occurred while ${state.acting}`,
     }))
-  }, [dispatch, error, hasSubscribed])
+  }, [dispatch, error, state])
 
-  return (
+  return user?.id !== channel.id && (
     <Button
       variant="contained"
       disabled={isLoading}
@@ -96,15 +108,16 @@ function ButtonSubscribe({channel, onSubscribed, onUnsubscribed}) {
       onClick={handleToggleSubscription}
     >
       {hasSubscribed && <NotificationsOutlinedIcon/>}
-      {hasSubscribed ? 'Subscribed' : 'Subscribe'}
+      Subscribe{hasSubscribed ? 'd' : ''}
     </Button>
   )
 }
 
-ButtonSubscribe.propTypes = {
+ButtonSubscription.propTypes = {
   channel: PropTypes.object,
+  hasSubscribed: PropTypes.bool,
   onSubscribed: PropTypes.func,
   onUnsubscribed: PropTypes.func,
 }
 
-export default ButtonSubscribe
+export default ButtonSubscription

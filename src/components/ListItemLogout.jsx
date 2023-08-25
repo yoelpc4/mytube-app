@@ -41,11 +41,19 @@ export default function ListItemLogout() {
       return
     }
 
+    const {response} = error
+
+    if (response?.status === 401) {
+      navigate('/')
+
+      return
+    }
+
     dispatch(openAlert({
       type: 'error',
       message: 'An error occurred while logging out'
     }))
-  }, [dispatch, error])
+  }, [dispatch, navigate, error])
 
   return (
     <ListItem disablePadding>

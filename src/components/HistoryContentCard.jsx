@@ -5,7 +5,7 @@ import ContentLink from '@/components/ContentLink.jsx'
 import useContent from '@/hooks/useContent.jsx'
 
 function HistoryContentCard({content}) {
-  const {description, countViews} = useContent(content)
+  const {description, viewsCount} = useContent(content)
 
   return (
     <ContentLink content={content} sx={{display: 'contents'}}>
@@ -35,7 +35,7 @@ function HistoryContentCard({content}) {
           </Typography>
 
           <Typography component="h3" variant="body2" color="grey.600">
-            {content.createdBy?.name} • {countViews} views
+            {content.createdBy?.name} • {viewsCount} views
           </Typography>
 
           <Typography

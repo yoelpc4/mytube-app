@@ -6,7 +6,7 @@ import ContentChannelLink from '@/components/ContentChannelLink.jsx'
 import useContent from '@/hooks/useContent.jsx'
 
 function RelatedContentCard({content}) {
-  const {createdAt, countViews} = useContent(content)
+  const {createdAt, viewsCount} = useContent(content)
 
   return (
     <Box sx={{display: 'flex', columnGap: 2}}>
@@ -45,7 +45,7 @@ function RelatedContentCard({content}) {
           </Typography>
 
           <Typography variant="body2" color="grey.600" sx={{fontWeight: 500}}>
-            {countViews} views • {createdAt}
+            {viewsCount} views • {createdAt}
           </Typography>
         </ContentChannelLink>
       </Box>

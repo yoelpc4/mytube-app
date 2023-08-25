@@ -1,16 +1,15 @@
 import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import Grid from '@mui/material/Unstable_Grid2'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import Avatar from '@mui/material/Avatar'
 import { openAlert } from '@/store/alert.js'
-import { selectUser } from '@/store/auth.js'
 import RelatedContentCard from '@/components/RelatedContentCard.jsx'
-import ButtonSubscribe from '@/components/ButtonSubscribe.jsx'
+import ButtonSubscription from '@/components/ButtonSubscription.jsx'
 import ContentChannelLink from '@/components/ContentChannelLink.jsx'
-import LikeDislikeButtons from '@/components/LikeDislikeButtons.jsx'
+import ButtonsExpression from '@/components/ButtonsExpression.jsx'
 import useAsync from '@/hooks/useAsync.jsx'
 import useChannel from '@/hooks/useChannel.jsx'
 import useContent from '@/hooks/useContent.jsx'
@@ -21,13 +20,28 @@ export default function Watch() {
 
   const {contentId} = useParams()
 
-  const user = useSelector(selectUser)
+  const {data, error, run} = useAsync()
 
-  const {data: content, error, run, setData} = useAsync()
+  const {
+    content,
+    description,
+    createdAt,
+    viewsCount,
+    likesCount,
+    dislikesCount,
+    setContent,
+    handleLiked,
+    handleDisliked,
+  } = useContent()
 
-  const {description, createdAt, countViews, countLikes, countDislikes} = useContent(content)
-
-  const {countSubscribers} = useChannel(content?.createdBy)
+  const {
+    channel,
+    hasSubscribed,
+    subscribersCount,
+    setChannel,
+    handleSubscribed,
+    handleUnsubscribed,
+  } = useChannel()
 
   useEffect(() => {
     const controller = new AbortController()
@@ -40,6 +54,18 @@ export default function Watch() {
   }, [run, contentId])
 
   useEffect(() => {
+    if (!data) {
+      return
+    }
+
+    const {createdBy, ...contentData} = data
+
+    setContent(contentData)
+
+    setChannel(createdBy)
+  }, [data, setContent, setChannel])
+
+  useEffect(() => {
     if (!error) {
       return
     }
@@ -50,47 +76,7 @@ export default function Watch() {
     }))
   }, [dispatch, error])
 
-  function onLiked() {
-    setData({
-      ...content,
-      countLikes: content.countLikes + (content.isLiked ? -1 : 1),
-      countDislikes: content.countDislikes + (content.isDisliked ? -1 : 0),
-      isLiked: !content.isLiked,
-      isDisliked: false,
-    })
-  }
-
-  function onDisliked() {
-    setData({
-      ...content,
-      countLikes: content.countLikes + (content.isLiked ? -1 : 0),
-      countDislikes: content.countDislikes + (content.isDisliked ? -1 : 1),
-      isLiked: false,
-      isDisliked: !content.isDisliked,
-    })
-  }
-
-  function onSubscribed() {
-    setData({
-      ...content,
-      createdBy: {
-        ...content.createdBy,
-        countChannelSubscriptions: content.createdBy.countChannelSubscriptions + 1,
-      },
-    })
-  }
-
-  function onUnsubscribed() {
-    setData({
-      ...content,
-      createdBy: {
-        ...content.createdBy,
-        countChannelSubscriptions: content.createdBy.countChannelSubscriptions - 1,
-      },
-    })
-  }
-
-  return content && (
+  return content && channel && (
     <Grid container rowSpacing={5} maxWidth="xl">
       <Grid md={12} lg={8} sx={{display: 'flex', flexDirection: 'column', rowGap: 2}}>
         <video
@@ -116,28 +102,31 @@ export default function Watch() {
             <Box>
               <ContentChannelLink content={content}>
                 <Typography component="h2" variant="h6">
-                  {content.createdBy?.name}
+                  {channel.name}
                 </Typography>
               </ContentChannelLink>
 
               <Typography sx={{fontSize: '0.875rem'}}>
-                {countSubscribers || 'No'} subscriber{countSubscribers === 1 ? '' : 's'}
+                {subscribersCount || 'No'} subscriber{subscribersCount === 1 ? '' : 's'}
               </Typography>
             </Box>
 
-            {user.id !== content.createdBy?.id && (
-              <ButtonSubscribe channel={content.createdBy} onSubscribed={onSubscribed} onUnsubscribed={onUnsubscribed}/>
-            )}
+            <ButtonSubscription
+              channel={channel}
+              hasSubscribed={hasSubscribed}
+              onSubscribed={handleSubscribed}
+              onUnsubscribed={handleUnsubscribed}
+            />
           </Box>
 
-          <LikeDislikeButtons
+          <ButtonsExpression
             contentId={content.id}
-            countLikes={countLikes}
-            countDislikes={countDislikes}
+            likesCount={likesCount}
+            dislikesCount={dislikesCount}
             isLiked={content.isLiked}
             isDisliked={content.isDisliked}
-            onLiked={onLiked}
-            onDisliked={onDisliked}
+            onLiked={handleLiked}
+            onDisliked={handleDisliked}
           />
         </Box>
 
@@ -152,7 +141,7 @@ export default function Watch() {
         >
           <Box sx={{display: 'flex', columnGap: 1}}>
             <Typography sx={{fontWeight: 500}}>
-              {countViews} views
+              {viewsCount} views
             </Typography>
 
             <Typography sx={{fontWeight: 500}}>
