@@ -2,10 +2,10 @@ import PropTypes from 'prop-types'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import ContentLink from '@/components/ContentLink.jsx'
-import ContentChannelLink from '@/components/ContentChannelLink.jsx'
+import ChannelLink from '@/components/ChannelLink.jsx'
 import useContent from '@/hooks/useContent.jsx'
 
-function ChannelContentCard({content}) {
+function ChannelContentCard({channel, content}) {
   const {createdAt, viewsCount} = useContent(content)
 
   return (
@@ -40,11 +40,11 @@ function ChannelContentCard({content}) {
             </Typography>
           </ContentLink>
 
-          <ContentChannelLink content={content}>
+          <ChannelLink username={channel.username}>
             <Typography component="h3" variant="body2" color="grey.600" sx={{fontWeight: 500}}>
-              {content.createdBy?.name}
+              {channel.name}
             </Typography>
-          </ContentChannelLink>
+          </ChannelLink>
 
           <Typography variant="body2" color="grey.600" sx={{fontWeight: 500, fontSize: '.875rem'}}>
             {viewsCount} views • {createdAt}
@@ -56,6 +56,7 @@ function ChannelContentCard({content}) {
 }
 
 ChannelContentCard.propTypes = {
+  channel: PropTypes.object,
   content: PropTypes.object,
 }
 

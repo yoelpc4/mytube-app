@@ -57,3 +57,9 @@ export const transformServerErrors = serverErrors => serverErrors.reduce((transf
 
   return transformedServerErrors
 }, {})
+
+export const pluralize = (noun, number) => {
+  const pluralSuffix = noun.endsWith('s') ? 'es' : 's'
+
+  return `${noun}${number === 1 ? '' : pluralSuffix}`
+}

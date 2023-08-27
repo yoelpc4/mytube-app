@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
-import imageUrl from '@/assets/images/not-found.svg'
+import notFoundImageUrl from '@/assets/images/not-found.svg'
 
 const StyledBox = styled(Box)(({theme}) => ({
   display: 'flex',
@@ -15,7 +15,7 @@ const StyledBox = styled(Box)(({theme}) => ({
 export default function NotFound() {
   return (
     <StyledBox>
-      <img src={imageUrl} alt="Not Found" width="240" />
+      <img src={notFoundImageUrl} alt="Not Found" width="240" />
 
       <Typography component="h1" variant="h2">
         Page Not Found

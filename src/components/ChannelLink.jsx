@@ -2,11 +2,11 @@ import PropTypes from 'prop-types'
 import { Link as RouterLink } from 'react-router-dom'
 import Link from '@mui/material/Link'
 
-function ContentChannelLink({ children, content, sx = {} }) {
+function ChannelLink({children, username, sx = {}}) {
   return (
     <Link
       component={RouterLink}
-      to={`/channel/${content.createdBy?.username}`}
+      to={`/channel/${username}`}
       color="inherit"
       underline="none"
       sx={sx}
@@ -16,10 +16,10 @@ function ContentChannelLink({ children, content, sx = {} }) {
   )
 }
 
-ContentChannelLink.propTypes = {
+ChannelLink.propTypes = {
   children: PropTypes.node,
-  content: PropTypes.object,
+  username: PropTypes.string,
   sx: PropTypes.object,
 }
 
-export default ContentChannelLink
+export default ChannelLink

@@ -10,6 +10,7 @@ import ButtonSubscription from '@/components/ButtonSubscription.jsx'
 import useAsync from '@/hooks/useAsync.jsx'
 import useChannel from '@/hooks/useChannel.jsx'
 import client from '@/utils/client.js'
+import { pluralize } from '@/utils/helpers.js';
 
 export default function Channel() {
   const dispatch = useDispatch()
@@ -77,7 +78,7 @@ export default function Channel() {
             </Typography>
 
             <Typography>
-              <strong>@{channel.username}</strong> {subscribersCount || 'No'} subscriber{subscribersCount === 1 ? '' : 's'} {contentsCount || 'No'} video{contentsCount === 1 ? '' : 's'}
+              <strong>@{channel.username}</strong> {subscribersCount || 'No'} {pluralize('subscriber', subscribersCount)} {contentsCount || 'No'} {pluralize('video', contentsCount)}
             </Typography>
           </Box>
         </Box>

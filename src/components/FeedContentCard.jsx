@@ -3,7 +3,7 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Avatar from '@mui/material/Avatar'
 import ContentLink from '@/components/ContentLink.jsx'
-import ContentChannelLink from '@/components/ContentChannelLink.jsx'
+import ChannelLink from '@/components/ChannelLink.jsx'
 import useContent from '@/hooks/useContent.jsx'
 
 function FeedContentCard({content}) {
@@ -23,9 +23,9 @@ function FeedContentCard({content}) {
       </ContentLink>
 
       <Box sx={{display: 'flex', mt: '3px'}}>
-        <ContentChannelLink content={content}>
+        <ChannelLink username={content.createdBy.username}>
           <Avatar alt="avatar" src="https://i.pravatar.cc/200" sx={{mr: '8px'}}/>
-        </ContentChannelLink>
+        </ChannelLink>
 
         <Box>
           <ContentLink content={content}>
@@ -45,11 +45,11 @@ function FeedContentCard({content}) {
             </Typography>
           </ContentLink>
 
-          <ContentChannelLink content={content}>
+          <ChannelLink username={content.createdBy.username}>
             <Typography component="h3" variant="body2" color="grey.600" sx={{fontWeight: 500}}>
-              {content.createdBy?.name}
+              {content.createdBy.name}
             </Typography>
-          </ContentChannelLink>
+          </ChannelLink>
 
           <Typography variant="body2" color="grey.600" sx={{fontWeight: 500}}>
             {viewsCount} views • {createdAt}

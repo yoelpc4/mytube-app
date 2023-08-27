@@ -8,12 +8,13 @@ import Avatar from '@mui/material/Avatar'
 import { openAlert } from '@/store/alert.js'
 import RelatedContentCard from '@/components/RelatedContentCard.jsx'
 import ButtonSubscription from '@/components/ButtonSubscription.jsx'
-import ContentChannelLink from '@/components/ContentChannelLink.jsx'
+import ChannelLink from '@/components/ChannelLink.jsx'
 import ButtonsExpression from '@/components/ButtonsExpression.jsx'
 import useAsync from '@/hooks/useAsync.jsx'
 import useChannel from '@/hooks/useChannel.jsx'
 import useContent from '@/hooks/useContent.jsx'
 import client from '@/utils/client.js'
+import { pluralize } from '@/utils/helpers.js';
 
 export default function Watch() {
   const dispatch = useDispatch()
@@ -95,19 +96,19 @@ export default function Watch() {
 
         <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
           <Box sx={{display: 'flex', alignItems: 'center', columnGap: 2}}>
-            <ContentChannelLink content={content}>
+            <ChannelLink username={channel.username}>
               <Avatar alt="avatar" src="https://i.pravatar.cc/200"/>
-            </ContentChannelLink>
+            </ChannelLink>
 
             <Box>
-              <ContentChannelLink content={content}>
+              <ChannelLink username={channel.username}>
                 <Typography component="h2" variant="h6">
                   {channel.name}
                 </Typography>
-              </ContentChannelLink>
+              </ChannelLink>
 
               <Typography sx={{fontSize: '0.875rem'}}>
-                {subscribersCount || 'No'} subscriber{subscribersCount === 1 ? '' : 's'}
+                {subscribersCount || 'No'} {pluralize('subscriber', subscribersCount)}
               </Typography>
             </Box>
 

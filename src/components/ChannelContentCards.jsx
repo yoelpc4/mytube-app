@@ -1,15 +1,18 @@
 import PropTypes from 'prop-types'
 import { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Grid from '@mui/material/Unstable_Grid2'
 import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
 import { openAlert } from '@/store/alert.js'
+import { selectUser } from '@/store/auth.js';
 import ChannelContentCard from '@/components/ChannelContentCard.jsx'
 import useInfiniteScroll from '@/hooks/useInfiniteScroll.jsx'
 
 function ChannelContentCards({channelId}) {
   const dispatch = useDispatch()
+
+  const user = useSelector(selectUser)
 
   const {ref, records: contents, error, hasMoreRecords} = useInfiniteScroll(`channels/${channelId}/contents`, {
     take: 12,
@@ -39,7 +42,7 @@ function ChannelContentCards({channelId}) {
       <Grid container spacing={2} maxWidth="xl" sx={{mx: 6}}>
         {contents.map(content => (
           <Grid key={content.id} sm={6} md={4} lg={3} xl={2}>
-            <ChannelContentCard content={content}/>
+            <ChannelContentCard channel={user} content={content}/>
           </Grid>
         ))}
       </Grid>
