@@ -32,7 +32,7 @@ export default function AvatarButtonPopover() {
   return (
     <>
       <Button onClick={handleClick}>
-        <Avatar alt="avatar" src="https://i.pravatar.cc/200"/>
+        <Avatar alt={user.name} src={user.profileUrl}/>
       </Button>
 
       <Popover
@@ -53,7 +53,7 @@ export default function AvatarButtonPopover() {
             <List>
               <ListItem alignItems="flex-start" onClick={handleClose}>
                 <ListItemAvatar>
-                  <Avatar alt="avatar" src="https://i.pravatar.cc/200"/>
+                  <Avatar alt={user.name} src={user.profileUrl}/>
                 </ListItemAvatar>
 
                 <ListItemText

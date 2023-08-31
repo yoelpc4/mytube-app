@@ -97,7 +97,7 @@ export default function Watch() {
         <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
           <Box sx={{display: 'flex', alignItems: 'center', columnGap: 2}}>
             <ChannelLink username={channel.username}>
-              <Avatar alt="avatar" src="https://i.pravatar.cc/200"/>
+              <Avatar alt={channel.name} src={channel.profileUrl}/>
             </ChannelLink>
 
             <Box>

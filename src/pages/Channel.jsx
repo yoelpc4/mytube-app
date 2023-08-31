@@ -62,7 +62,8 @@ export default function Channel() {
     <Box sx={{display: 'flex', flexDirection: 'column', rowGap: 3}}>
       <Box
         sx={{
-          backgroundImage: "url('https://picsum.photos/1920/1080')",
+          background: `#fff url('${channel.bannerUrl}') no-repeat center center`,
+          backgroundSize: 'cover',
           height: '240px',
           margin: 0,
         }}
@@ -70,7 +71,7 @@ export default function Channel() {
 
       <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', mx: 6}}>
         <Box sx={{display: 'flex', alignItems: 'center', columnGap: 2}}>
-          <Avatar alt="avatar" src="https://i.pravatar.cc/200" sx={{width: 120, height: 120}}/>
+          <Avatar alt={channel.name} src={channel.profileUrl} sx={{width: 120, height: 120}}/>
 
           <Box>
             <Typography component="h2" variant="h6">

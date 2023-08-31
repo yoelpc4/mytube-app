@@ -24,7 +24,7 @@ function FeedContentCard({content}) {
 
       <Box sx={{display: 'flex', mt: '3px'}}>
         <ChannelLink username={content.createdBy.username}>
-          <Avatar alt="avatar" src="https://i.pravatar.cc/200" sx={{mr: '8px'}}/>
+          <Avatar alt={content.createdBy.name} src={content.createdBy.profileUrl} sx={{mr: '8px'}}/>
         </ChannelLink>
 
         <Box>

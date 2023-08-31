@@ -8,18 +8,21 @@ export default function useForm(initialInputs = {}) {
 
   const [errors, setErrors] = useState({})
 
-  const handleInput = useCallback(event => {
-    setInputs(inputs => ({
-      ...inputs,
-      [event.target.name]: event.target.value,
-    }))
-  }, [setInputs])
+  const handleInput = useCallback(event => setInputs(inputs => ({
+    ...inputs,
+    [event.target.name]: event.target.value,
+  })), [])
+
+  const updateInput = useCallback((name, value) => setInputs(inputs => ({
+    ...inputs,
+    [name]: value,
+  })), [])
 
   const handleReset = useCallback(() => {
     setInputs(initialInputsRef.current)
 
     setErrors({})
-  }, [setInputs, setErrors])
+  }, [])
 
   const handleSubmit = useCallback(callback => event => {
     event.preventDefault()
@@ -27,9 +30,7 @@ export default function useForm(initialInputs = {}) {
     callback(inputs)
   }, [inputs])
 
-  const handleServerErrors = useCallback(serverErrors => {
-    setErrors(transformServerErrors(serverErrors))
-  }, [setErrors])
+  const handleServerErrors = useCallback(serverErrors => setErrors(transformServerErrors(serverErrors)), [setErrors])
 
   return {
     inputs,
@@ -37,6 +38,7 @@ export default function useForm(initialInputs = {}) {
     setInputs,
     setErrors,
     handleInput,
+    updateInput,
     handleReset,
     handleSubmit,
     handleServerErrors,
