@@ -11,6 +11,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import PlayCircleOutlinedIcon from '@mui/icons-material/PlayCircleOutlined';
 import PortraitOutlinedIcon from '@mui/icons-material/PortraitOutlined';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
@@ -59,19 +60,9 @@ export default function AvatarButtonPopover() {
                 <ListItemText
                   primary={user.name}
                   secondary={
-                    <>
-                      <span style={{display: 'block', color: '#000', marginBottom: '5px'}}>
-                        @{user.username}
-                      </span>
-
-                      <RouterLink
-                        to="/account"
-                        style={{display: 'block', textDecoration: 'none'}}
-                        onClick={handleClose}
-                      >
-                        Manage your account
-                      </RouterLink>
-                    </>
+                    <span style={{display: 'block', color: '#000'}}>
+                      @{user.username}
+                    </span>
                   }
                 />
               </ListItem>
@@ -108,6 +99,23 @@ export default function AvatarButtonPopover() {
                     </ListItemIcon>
 
                     <ListItemText primary="MyTube Studio"/>
+                  </ListItemButton>
+                </ListItem>
+              </li>
+
+              <li>
+                <ListItem
+                  component={RouterLink}
+                  to="/update-password"
+                  disablePadding
+                  sx={{textDecoration: 'none', color: 'inherit'}}
+                >
+                  <ListItemButton onClick={handleClose}>
+                    <ListItemIcon>
+                      <LockOutlinedIcon/>
+                    </ListItemIcon>
+
+                    <ListItemText primary="Update Password"/>
                   </ListItemButton>
                 </ListItem>
               </li>

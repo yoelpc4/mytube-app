@@ -62,7 +62,7 @@ export default function Channel() {
     <Box sx={{display: 'flex', flexDirection: 'column', rowGap: 3}}>
       <Box
         sx={{
-          background: `#fff url('${channel.bannerUrl}') no-repeat center center`,
+          background: `#f9f9f9 url('${channel.bannerUrl}') no-repeat center center`,
           backgroundSize: 'cover',
           height: '240px',
           margin: 0,

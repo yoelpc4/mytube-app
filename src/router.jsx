@@ -9,8 +9,6 @@ import History from '@/pages/History.jsx'
 import Login from '@/pages/Login.jsx'
 import Home from '@/pages/Home.jsx'
 import Register from '@/pages/Register.jsx'
-import Account from '@/pages/Account.jsx'
-import UpdateProfile from '@/pages/UpdateProfile.jsx'
 import UpdatePassword from '@/pages/UpdatePassword.jsx'
 import ForgotPassword from '@/pages/ForgotPassword.jsx';
 import ResetPassword from '@/pages/ResetPassword.jsx';
@@ -52,18 +50,8 @@ const router = createBrowserRouter([
                 element: <History/>,
               },
               {
-                path: '/account',
-                element: <Account/>,
-                children: [
-                  {
-                    index: true,
-                    element: <UpdateProfile/>,
-                  },
-                  {
-                    path: 'password',
-                    element: <UpdatePassword/>,
-                  },
-                ],
+                path: 'update-password',
+                element: <UpdatePassword/>,
               },
             ],
           },
