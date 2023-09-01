@@ -7,7 +7,7 @@ import Drawer from '@/components/Drawer.jsx'
 import Container from '@mui/material/Container'
 
 export default function Primary() {
-  const [isOpen, setIsOpen] = useState(true)
+  const [isOpen, setIsOpen] = useState(false)
 
   const toggleIsOpen = () => setIsOpen(isOpen => !isOpen)
 
@@ -17,7 +17,7 @@ export default function Primary() {
 
       <AppBar isOpen={isOpen} toggleIsOpen={toggleIsOpen} />
 
-      <Drawer isOpen={isOpen} />
+      <Drawer isOpen={isOpen} toggleIsOpen={toggleIsOpen} />
 
       <Container component="main" maxWidth="xl" sx={{mt: 8}}>
         <Outlet/>

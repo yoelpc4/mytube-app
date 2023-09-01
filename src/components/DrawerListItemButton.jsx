@@ -4,7 +4,7 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import ListItemButton from '@mui/material/ListItemButton'
 
-function DrawerListItemButton({isOpen, route}) {
+function DrawerListItemButton({route}) {
   const match = useMatch({
     path: route.to,
   })
@@ -20,8 +20,8 @@ function DrawerListItemButton({isOpen, route}) {
       selected={!!match}
       sx={{
         minHeight: 48,
-        flexDirection: isOpen ? 'row' : 'column',
-        justifyContent: isOpen ? 'initial' : 'center',
+        flexDirection: 'row',
+        justifyContent: 'initial',
         alignItems: 'center',
         px: 2.5,
         borderRadius: '0 10px 10px 0',
@@ -30,7 +30,7 @@ function DrawerListItemButton({isOpen, route}) {
       <ListItemIcon
         sx={{
           minWidth: 0,
-          mr: isOpen ? 2 : 'auto',
+          mr: 2,
           justifyContent: 'center',
           alignItems: 'center',
         }}
@@ -43,7 +43,7 @@ function DrawerListItemButton({isOpen, route}) {
         primaryTypographyProps={{
           color,
           sx: {
-            fontSize: isOpen ? '1rem' : '.875rem'
+            fontSize: '1rem',
           },
       }}
       />
@@ -52,7 +52,6 @@ function DrawerListItemButton({isOpen, route}) {
 }
 
 DrawerListItemButton.propTypes = {
-  isOpen: PropTypes.bool,
   route: PropTypes.object,
 }
 

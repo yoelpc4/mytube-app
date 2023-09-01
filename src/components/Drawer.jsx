@@ -1,38 +1,14 @@
 import PropTypes from 'prop-types'
 import List from '@mui/material/List'
-import { styled } from '@mui/material/styles'
 import MuiDrawer from '@mui/material/Drawer'
 import ListItem from '@mui/material/ListItem'
 import HomeIcon from '@mui/icons-material/Home'
 import HistoryIcon from '@mui/icons-material/History'
+import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined.js'
+import IconButton from '@mui/material/IconButton';
+import Box from '@mui/material/Box';
 import DrawerListItemButton from '@/components/DrawerListItemButton.jsx'
-
-const StyledDrawer = styled(MuiDrawer, {shouldForwardProp: prop => prop !== 'open'})(
-  ({theme, open}) => ({
-    '& .MuiDrawer-paper': {
-      position: 'relative',
-      whiteSpace: 'nowrap',
-      width: 240,
-      transition: theme.transitions.create('width', {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-      boxSizing: 'border-box',
-      borderRight: 'none',
-      ...(!open && {
-        overflowX: 'hidden',
-        transition: theme.transitions.create('width', {
-          easing: theme.transitions.easing.sharp,
-          duration: theme.transitions.duration.leavingScreen,
-        }),
-        width: theme.spacing(0),
-        [theme.breakpoints.up('sm')]: {
-          width: theme.spacing(9),
-        },
-      }),
-    },
-  }),
-)
+import PrimaryIcon from '@/components/PrimaryIcon.jsx';
 
 const routes = [
   {
@@ -47,22 +23,55 @@ const routes = [
   },
 ]
 
-function Drawer({isOpen}) {
+const container = window !== undefined ? () => window.document.body : undefined
+
+function Drawer({isOpen, toggleIsOpen}) {
   return (
-    <StyledDrawer variant="permanent" open={isOpen} sx={{pt: 8}}>
-      <List component="nav">
-        {routes.map((route, index) => (
-          <ListItem key={index} disablePadding sx={{display: 'block'}}>
-            <DrawerListItemButton isOpen={isOpen} route={route} />
-          </ListItem>
-        ))}
-      </List>
-    </StyledDrawer>
+    <MuiDrawer
+      component="aside"
+      variant="temporary"
+      container={container}
+      open={isOpen}
+      ModalProps={{keepMounted: true}}
+      sx={{
+        display: 'block',
+        '& .MuiDrawer-paper': {
+          boxSizing: 'border-box',
+          width: 240,
+        },
+      }}
+      onClose={toggleIsOpen}
+    >
+      <Box sx={{display: 'flex', p: 2}}>
+        <IconButton
+          edge="start"
+          color="inherit"
+          aria-label="toggle drawer"
+          sx={{marginRight: '16px'}}
+          onClick={toggleIsOpen}
+        >
+          <MenuOutlinedIcon sx={{color: '#000'}}/>
+        </IconButton>
+
+        <PrimaryIcon />
+      </Box>
+
+      <nav>
+        <List onClick={toggleIsOpen}>
+          {routes.map((route, index) => (
+            <ListItem key={index} disablePadding sx={{display: 'block'}}>
+              <DrawerListItemButton route={route} />
+            </ListItem>
+          ))}
+        </List>
+      </nav>
+    </MuiDrawer>
   )
 }
 
 Drawer.propTypes = {
   isOpen: PropTypes.bool,
+  toggleIsOpen: PropTypes.func,
 }
 
 export default Drawer

@@ -51,8 +51,8 @@ export default function AvatarButtonPopover() {
       >
         <Box sx={{width: '100%', maxWidth: 360, bgcolor: 'background.paper'}}>
           <nav>
-            <List>
-              <ListItem alignItems="flex-start" onClick={handleClose}>
+            <List onClick={handleClose}>
+              <ListItem alignItems="flex-start">
                 <ListItemAvatar>
                   <Avatar alt={user.name} src={user.profileUrl}/>
                 </ListItemAvatar>
@@ -76,7 +76,7 @@ export default function AvatarButtonPopover() {
                   disablePadding
                   sx={{textDecoration: 'none', color: 'inherit'}}
                 >
-                  <ListItemButton onClick={handleClose}>
+                  <ListItemButton>
                     <ListItemIcon>
                       <PortraitOutlinedIcon/>
                     </ListItemIcon>
@@ -93,7 +93,7 @@ export default function AvatarButtonPopover() {
                   disablePadding
                   style={{textDecoration: 'none', color: 'inherit'}}
                 >
-                  <ListItemButton onClick={handleClose}>
+                  <ListItemButton>
                     <ListItemIcon>
                       <PlayCircleOutlinedIcon/>
                     </ListItemIcon>
@@ -110,7 +110,7 @@ export default function AvatarButtonPopover() {
                   disablePadding
                   sx={{textDecoration: 'none', color: 'inherit'}}
                 >
-                  <ListItemButton onClick={handleClose}>
+                  <ListItemButton>
                     <ListItemIcon>
                       <LockOutlinedIcon/>
                     </ListItemIcon>
