@@ -7,32 +7,22 @@ import { styled } from '@mui/material/styles'
 import MuiAppBar from '@mui/material/AppBar'
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined.js'
 import Button from '@mui/material/Button';
+import YouTubeIcon from '@mui/icons-material/YouTube';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import Typography from '@mui/material/Typography';
 import { selectUser } from '@/store/auth.js';
 import AvatarButtonPopover from '@/components/AvatarButtonPopover.jsx'
-import PrimaryIcon from '@/components/PrimaryIcon.jsx';
 
-const StyledAppBar = styled(MuiAppBar, {
-  shouldForwardProp: prop => prop !== 'open',
-})(({theme, open}) => ({
+const StyledAppBar = styled(MuiAppBar)(({theme}) => ({
+  zIndex: theme.zIndex.drawer + 1,
   background: '#fff',
-  transition: theme.transitions.create(['width', 'margin'], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
 }))
 
-function AppBar({isOpen, toggleIsOpen}) {
+function AppBar({toggleIsOpen}) {
   const user = useSelector(selectUser)
 
   return (
-    <StyledAppBar elevation={0} position="fixed" open={isOpen}>
+    <StyledAppBar elevation={0} position="fixed">
       <Toolbar>
         <IconButton
           edge="start"
@@ -44,7 +34,19 @@ function AppBar({isOpen, toggleIsOpen}) {
           <MenuOutlinedIcon sx={{color: '#000'}}/>
         </IconButton>
 
-        <PrimaryIcon />
+        <Link to="/" style={{display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'inherit'}}>
+          <YouTubeIcon fontSize="large" sx={{mr: .5, color: 'red'}}/>
+
+          <Typography
+            component="span"
+            variant="h5"
+            color="black"
+            noWrap
+            sx={{fontWeight: 600}}
+          >
+            MyTube
+          </Typography>
+        </Link>
 
         <div style={{flexGrow: 1}}></div>
 
@@ -65,7 +67,6 @@ function AppBar({isOpen, toggleIsOpen}) {
 }
 
 AppBar.propTypes = {
-  isOpen: PropTypes.bool,
   toggleIsOpen: PropTypes.func,
 }
 

@@ -1,13 +1,18 @@
 import { useState } from 'react'
 import { Outlet } from 'react-router-dom'
+import { useMediaQuery } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline'
 import Box from '@mui/material/Box'
 import AppBar from '@/components/Primary/AppBar.jsx'
-import Drawer from '@/components/Drawer.jsx'
-import Container from '@mui/material/Container'
+import Drawer from '@/components/Primary/Drawer.jsx'
+import Main from '@/components/Primary/Main.jsx';
+
+const drawerWidth = 240
 
 export default function Primary() {
-  const [isOpen, setIsOpen] = useState(false)
+  const isNotMobile = useMediaQuery(theme => theme.breakpoints.up('sm'))
+
+  const [isOpen, setIsOpen] = useState(isNotMobile)
 
   const toggleIsOpen = () => setIsOpen(isOpen => !isOpen)
 
@@ -15,13 +20,13 @@ export default function Primary() {
     <Box sx={{display: 'flex'}}>
       <CssBaseline/>
 
-      <AppBar isOpen={isOpen} toggleIsOpen={toggleIsOpen} />
+      <AppBar isOpen={isOpen} toggleIsOpen={toggleIsOpen}/>
 
-      <Drawer isOpen={isOpen} toggleIsOpen={toggleIsOpen} />
+      <Drawer isOpen={isOpen} drawerWidth={drawerWidth}/>
 
-      <Container component="main" maxWidth="xl" sx={{mt: 8}}>
+      <Main isOpen={isOpen} drawerWidth={drawerWidth}>
         <Outlet/>
-      </Container>
+      </Main>
     </Box>
   )
 }
