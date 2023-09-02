@@ -10,9 +10,9 @@ import Main from '@/components/Primary/Main.jsx';
 const drawerWidth = 240
 
 export default function Primary() {
-  const isNotMobile = useMediaQuery(theme => theme.breakpoints.up('sm'))
+  const isMobile = useMediaQuery(theme => theme.breakpoints.down('md'))
 
-  const [isOpen, setIsOpen] = useState(isNotMobile)
+  const [isOpen, setIsOpen] = useState(!isMobile)
 
   const toggleIsOpen = () => setIsOpen(isOpen => !isOpen)
 
@@ -22,9 +22,9 @@ export default function Primary() {
 
       <AppBar isOpen={isOpen} toggleIsOpen={toggleIsOpen}/>
 
-      <Drawer isOpen={isOpen} drawerWidth={drawerWidth}/>
+      <Drawer isOpen={isOpen} isMobile={isMobile} drawerWidth={drawerWidth} toggleIsOpen={toggleIsOpen}/>
 
-      <Main isOpen={isOpen} drawerWidth={drawerWidth}>
+      <Main isOpen={isOpen} isMobile={isMobile} drawerWidth={drawerWidth}>
         <Outlet/>
       </Main>
     </Box>

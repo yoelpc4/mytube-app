@@ -1,27 +1,33 @@
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
 
-const StyledMain = styled('main')(({theme, isOpen, drawerWidth}) => ({
+const StyledMain = styled(Box)(({theme, isOpen, isMobile, drawerWidth}) => ({
   flexGrow: 1,
-  marginLeft: `-${drawerWidth}px`,
-  padding: theme.spacing(3),
-  paddingTop: '70px',
-  transition: theme.transitions.create(['margin'], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
+  ...(isMobile && {
+    padding: '80px 5px 0 5px',
   }),
-  ...(isOpen && {
-    marginLeft: 0,
+  ...(!isMobile && {
+    padding: theme.spacing(3),
+    paddingTop: '80px',
+    marginLeft: `-${drawerWidth}px`,
     transition: theme.transitions.create(['margin'], {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    ...(isOpen && {
+      marginLeft: 0,
+      transition: theme.transitions.create(['margin'], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
     }),
   }),
 }))
 
-function Main({children, isOpen, drawerWidth}) {
+function Main({children, isOpen, isMobile, drawerWidth}) {
   return (
-    <StyledMain isOpen={isOpen} drawerWidth={drawerWidth}>
+    <StyledMain component="main" isOpen={isOpen} isMobile={isMobile} drawerWidth={drawerWidth}>
       {children}
     </StyledMain>
   )
@@ -30,6 +36,7 @@ function Main({children, isOpen, drawerWidth}) {
 Main.propTypes = {
   children: PropTypes.node,
   isOpen: PropTypes.bool,
+  isMobile: PropTypes.bool,
   drawerWidth: PropTypes.number,
 }
 
