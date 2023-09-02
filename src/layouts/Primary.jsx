@@ -10,7 +10,7 @@ import Main from '@/components/Primary/Main.jsx';
 const drawerWidth = 240
 
 export default function Primary() {
-  const isMobile = useMediaQuery(theme => theme.breakpoints.down('md'))
+  const isMobile = useMediaQuery(theme => theme.breakpoints.down('sm'))
 
   const [isOpen, setIsOpen] = useState(!isMobile)
 
