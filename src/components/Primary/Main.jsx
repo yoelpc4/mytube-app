@@ -7,11 +7,10 @@ const StyledMain = styled(Box, {
 })(({theme, isOpen, isMobile, drawerWidth}) => ({
   flexGrow: 1,
   ...(isMobile && {
-    padding: '80px 5px 0 5px',
+    padding: theme.spacing(2),
   }),
   ...(!isMobile && {
     padding: theme.spacing(3),
-    paddingTop: '80px',
     marginLeft: `-${drawerWidth}px`,
     transition: theme.transitions.create(['margin'], {
       easing: theme.transitions.easing.sharp,
@@ -25,6 +24,7 @@ const StyledMain = styled(Box, {
       }),
     }),
   }),
+  paddingTop: theme.spacing(9),
 }))
 
 function Main({children, isOpen, isMobile, drawerWidth}) {

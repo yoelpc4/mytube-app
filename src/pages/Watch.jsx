@@ -78,7 +78,7 @@ export default function Watch() {
   }, [dispatch, error])
 
   return content && channel && (
-    <Grid container rowSpacing={5} maxWidth="xl">
+    <Grid container columnSpacing={2} rowSpacing={3} maxWidth="xl">
       <Grid md={12} lg={8} sx={{display: 'flex', flexDirection: 'column', rowGap: 2}}>
         <video
           title={content.title}
@@ -86,7 +86,7 @@ export default function Watch() {
           src={content.videoUrl}
           poster={content.thumbnailUrl}
           width="100%"
-          style={{borderRadius: '10px'}}
+          style={{borderRadius: '10px', maxWidth: '100%'}}
         >
         </video>
 
@@ -162,7 +162,7 @@ export default function Watch() {
         </Box>
       </Grid>
 
-      <Grid md={12} lg={4} sx={{display: 'flex', flexDirection: 'column', rowGap: 2, px: 3}}>
+      <Grid md={12} lg={4} sx={{display: 'flex', flexDirection: 'column', rowGap: 2}}>
         {content.relatedContents?.map(content => (
           <RelatedContentCard key={content.id} content={content}/>
         ))}

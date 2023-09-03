@@ -60,10 +60,10 @@ function DrawerNonMobile({isOpen, drawerWidth, ...props}) {
   )
 }
 
-function Nav() {
+function Nav({onClick}) {
   return (
     <nav>
-      <List>
+      <List onClick={onClick}>
         {routes.map((route, index) => (
           <ListItem key={index} disablePadding sx={{display: 'block'}}>
             <DrawerListItemButton route={route}/>
@@ -75,15 +75,23 @@ function Nav() {
 }
 
 function Drawer({isOpen, isMobile, drawerWidth, toggleIsOpen}) {
+  const handleClick = () => {
+    if (!isMobile) {
+      return
+    }
+
+    toggleIsOpen()
+  }
+
   return (
     <aside>
       {isMobile ? (
         <DrawerMobile isOpen={isOpen} drawerWidth={drawerWidth} toggleIsOpen={toggleIsOpen}>
-          <Nav/>
+          <Nav onClick={handleClick}/>
         </DrawerMobile>
       ) : (
         <DrawerNonMobile isOpen={isOpen} drawerWidth={drawerWidth}>
-          <Nav/>
+          <Nav onClick={handleClick}/>
         </DrawerNonMobile>
       )}
     </aside>
@@ -99,6 +107,10 @@ DrawerMobile.propTypes = {
 DrawerNonMobile.propTypes = {
   isOpen: PropTypes.bool,
   drawerWidth: PropTypes.number,
+}
+
+Nav.propTypes = {
+  onClick: PropTypes.func,
 }
 
 Drawer.propTypes = {
