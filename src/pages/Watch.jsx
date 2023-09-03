@@ -78,7 +78,7 @@ export default function Watch() {
   }, [dispatch, error])
 
   return content && channel && (
-    <Grid container columnSpacing={2} rowSpacing={3} maxWidth="xl">
+    <Grid container columnSpacing={2} rowSpacing={3}>
       <Grid md={12} lg={8} sx={{display: 'flex', flexDirection: 'column', rowGap: 2}}>
         <video
           title={content.title}
