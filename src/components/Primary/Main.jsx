@@ -2,7 +2,9 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 
-const StyledMain = styled(Box)(({theme, isOpen, isMobile, drawerWidth}) => ({
+const StyledMain = styled(Box, {
+  shouldForwardProp: prop => !['isOpen', 'isMobile', 'drawerWidth'].includes(prop)
+})(({theme, isOpen, isMobile, drawerWidth}) => ({
   flexGrow: 1,
   ...(isMobile && {
     padding: '80px 5px 0 5px',
