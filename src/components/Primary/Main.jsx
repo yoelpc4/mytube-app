@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 
 const StyledMain = styled(Box, {
-  shouldForwardProp: prop => !['isOpen', 'isMobile', 'drawerWidth'].includes(prop)
+  shouldForwardProp: prop => !['isOpen', 'isMobile', 'drawerWidth'].includes(prop),
 })(({theme, isOpen, isMobile, drawerWidth}) => ({
   flexGrow: 1,
   ...(isMobile && {

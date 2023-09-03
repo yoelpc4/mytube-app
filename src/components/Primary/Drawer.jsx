@@ -19,68 +19,96 @@ const routes = [
   },
 ]
 
+function MobileDrawer({children, isOpen, drawerWidth, toggleIsOpen}) {
+  return (
+    <MuiDrawer
+      variant="temporary"
+      open={isOpen}
+      ModalProps={{
+        keepMounted: true,
+      }}
+      sx={{
+        width: drawerWidth,
+        '& .MuiDrawer-paper': {
+          pt: 8,
+          width: drawerWidth,
+          border: 'none',
+        },
+      }}
+      onClose={toggleIsOpen}
+    >
+      {children}
+    </MuiDrawer>
+  )
+}
+
+function NonMobileDrawer({children, isOpen, drawerWidth}) {
+  return (
+    <MuiDrawer
+      variant="persistent"
+      open={isOpen}
+      sx={{
+        width: drawerWidth,
+        flexShrink: 0,
+        '& .MuiDrawer-paper': {
+          pt: 8,
+          width: drawerWidth,
+          border: 'none',
+        },
+      }}
+    >
+      {children}
+    </MuiDrawer>
+  )
+}
+
+function Nav() {
+  return (
+    <nav>
+      <List>
+        {routes.map((route, index) => (
+          <ListItem key={index} disablePadding sx={{display: 'block'}}>
+            <DrawerListItemButton route={route}/>
+          </ListItem>
+        ))}
+      </List>
+    </nav>
+  )
+}
+
 function Drawer({isOpen, isMobile, drawerWidth, toggleIsOpen}) {
   return (
     <aside>
       {isMobile ? (
-        <MuiDrawer
-          variant="temporary"
-          open={isOpen}
-          ModalProps={{
-            keepMounted: true,
-          }}
-          sx={{
-            width: drawerWidth,
-            '& .MuiDrawer-paper': {
-              pt: 8,
-              width: drawerWidth,
-              border: 'none',
-            },
-          }}
-          onClose={toggleIsOpen}
-        >
-          <nav>
-            <List>
-              {routes.map((route, index) => (
-                <ListItem key={index} disablePadding sx={{display: 'block'}}>
-                  <DrawerListItemButton route={route}/>
-                </ListItem>
-              ))}
-            </List>
-          </nav>
-        </MuiDrawer>
+        <MobileDrawer isOpen={isOpen} drawerWidth={drawerWidth} toggleIsOpen={toggleIsOpen}>
+          <Nav />
+        </MobileDrawer>
       ) : (
-        <MuiDrawer
-          variant="persistent"
-          open={isOpen}
-          sx={{
-            width: drawerWidth,
-            flexShrink: 0,
-            '& .MuiDrawer-paper': {
-              pt: 8,
-              width: drawerWidth,
-              border: 'none',
-            },
-          }}
-        >
-          <nav>
-            <List>
-              {routes.map((route, index) => (
-                <ListItem key={index} disablePadding sx={{display: 'block'}}>
-                  <DrawerListItemButton route={route}/>
-                </ListItem>
-              ))}
-            </List>
-          </nav>
-        </MuiDrawer>
+        <NonMobileDrawer isOpen={isOpen} drawerWidth={drawerWidth}>
+          <Nav />
+        </NonMobileDrawer>
       )}
     </aside>
   )
 }
 
+MobileDrawer.propTypes = {
+  children: PropTypes.node,
+  isOpen: PropTypes.bool,
+  drawerWidth: PropTypes.number,
+  toggleIsOpen: PropTypes.func,
+}
+
+NonMobileDrawer.propTypes = {
+  children: PropTypes.node,
+  isOpen: PropTypes.bool,
+  drawerWidth: PropTypes.number,
+}
+
 Drawer.propTypes = {
   isOpen: PropTypes.bool,
   isMobile: PropTypes.bool,
+  children: PropTypes.node,
   drawerWidth: PropTypes.number,
   toggleIsOpen: PropTypes.func,
 }
