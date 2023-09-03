@@ -19,7 +19,7 @@ const routes = [
   },
 ]
 
-function MobileDrawer({children, isOpen, drawerWidth, toggleIsOpen}) {
+function DrawerMobile({children, isOpen, drawerWidth, toggleIsOpen}) {
   return (
     <MuiDrawer
       variant="temporary"
@@ -42,7 +42,7 @@ function MobileDrawer({children, isOpen, drawerWidth, toggleIsOpen}) {
   )
 }
 
-function NonMobileDrawer({children, isOpen, drawerWidth}) {
+function DrawerNonMobile({children, isOpen, drawerWidth}) {
   return (
     <MuiDrawer
       variant="persistent"
@@ -80,26 +80,26 @@ function Drawer({isOpen, isMobile, drawerWidth, toggleIsOpen}) {
   return (
     <aside>
       {isMobile ? (
-        <MobileDrawer isOpen={isOpen} drawerWidth={drawerWidth} toggleIsOpen={toggleIsOpen}>
+        <DrawerMobile isOpen={isOpen} drawerWidth={drawerWidth} toggleIsOpen={toggleIsOpen}>
           <Nav />
-        </MobileDrawer>
+        </DrawerMobile>
       ) : (
-        <NonMobileDrawer isOpen={isOpen} drawerWidth={drawerWidth}>
+        <DrawerNonMobile isOpen={isOpen} drawerWidth={drawerWidth}>
           <Nav />
-        </NonMobileDrawer>
+        </DrawerNonMobile>
       )}
     </aside>
   )
 }
 
-MobileDrawer.propTypes = {
+DrawerMobile.propTypes = {
   children: PropTypes.node,
   isOpen: PropTypes.bool,
   drawerWidth: PropTypes.number,
   toggleIsOpen: PropTypes.func,
 }
 
-NonMobileDrawer.propTypes = {
+DrawerNonMobile.propTypes = {
   children: PropTypes.node,
   isOpen: PropTypes.bool,
   drawerWidth: PropTypes.number,
