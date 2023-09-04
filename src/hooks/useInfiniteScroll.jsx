@@ -1,16 +1,17 @@
 import { useEffect, useRef, useState } from 'react'
-import { useInView } from 'react-intersection-observer'
 import useAsync from '@/hooks/useAsync.jsx'
 import client from '@/utils/client.js'
 
-export default function useInfiniteScroll(url, params) {
-  const paramsRef = useRef(params)
+export default function useInfiniteScroll(url, initialParams = {}) {
+  const ref = useRef()
 
   const [records, setRecords] = useState([])
 
-  const {ref, inView, entry} = useInView()
-
   const {data, error, isLoading, run} = useAsync()
+
+  const [params, setParams] = useState(initialParams)
+
+  const [cursor, setCursor] = useState(null)
 
   const total = data?.meta?.total ?? 0
 
@@ -21,29 +22,40 @@ export default function useInfiniteScroll(url, params) {
 
     run(client.get(url, {
       signal: controller.signal,
-      params: paramsRef.current,
+      params,
     }).then(({data}) => data))
 
     return () => controller.abort()
-  }, [url, run])
+  }, [url, run, params])
 
   useEffect(() => {
-    if (!hasMoreRecords || !inView || !data || !Array.isArray(data.data) || !data.data.length) {
+    const element = ref.current
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) {
+        return
+      }
+
+      setParams(params => ({
+        ...params,
+        cursor,
+      }))
+    }, {rootMargin: '10%'})
+
+    if (isLoading || !element || !cursor) {
       return
     }
 
-    const controller = new AbortController()
+    observer.observe(element)
 
-    run(client.get(url, {
-      signal: controller.signal,
-      params: {
-        ...paramsRef.current,
-        cursor: data.data[data.data.length - 1].id,
-      },
-    }).then(({data}) => data))
+    return () => {
+      if (!element) {
+        return
+      }
 
-    return () => controller?.abort()
-  }, [url, run, data, inView, hasMoreRecords, entry])
+      observer.unobserve(element)
+    }
+  }, [cursor, isLoading])
 
   useEffect(() => {
     if (!data || !Array.isArray(data.data) || !data.data.length) {
@@ -51,6 +63,8 @@ export default function useInfiniteScroll(url, params) {
     }
 
     setRecords(records => records.concat(data.data))
+
+    setCursor(data.data.at(-1).id)
   }, [data])
 
   return {
