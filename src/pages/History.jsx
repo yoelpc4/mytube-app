@@ -32,7 +32,6 @@ export default function History() {
         flexDirection: 'column',
         alignItems: 'center',
         height: '90vh',
-        overflowY: 'scroll',
       }}
     >
       <Grid container rowSpacing={2} maxWidth="xl">

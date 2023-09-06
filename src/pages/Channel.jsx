@@ -8,6 +8,7 @@ import { openAlert } from '@/store/alert.js'
 import ChannelContentCards from '@/components/ChannelContentCards.jsx'
 import ButtonSubscription from '@/components/ButtonSubscription.jsx'
 import useAsync from '@/hooks/useAsync.jsx'
+import useBreakpoints from '@/hooks/useBreakpoints.jsx';
 import useChannel from '@/hooks/useChannel.jsx'
 import client from '@/utils/client.js'
 import { pluralize } from '@/utils/helpers.js';
@@ -16,6 +17,8 @@ export default function Channel() {
   const dispatch = useDispatch()
 
   const {username} = useParams()
+
+  const {isMobile} = useBreakpoints()
 
   const {data, error, run} = useAsync()
 
@@ -64,22 +67,24 @@ export default function Channel() {
         sx={{
           background: `#f9f9f9 url('${channel.bannerUrl}') no-repeat center center`,
           backgroundSize: 'cover',
-          height: '240px',
+          height: '144px',
           margin: 0,
         }}
       />
 
-      <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', mx: 6}}>
+      <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
         <Box sx={{display: 'flex', alignItems: 'center', columnGap: 2}}>
-          <Avatar alt={channel.name} src={channel.profileUrl} sx={{width: 120, height: 120}}/>
+          <Avatar alt={channel.name} src={channel.profileUrl} sx={{width: isMobile ? 50 : 120, height: isMobile ? 50 : 120}}/>
 
           <Box>
             <Typography component="h2" variant="h6">
               {channel.name}
             </Typography>
 
-            <Typography>
-              <strong>@{channel.username}</strong> {subscribersCount || 'No'} {pluralize('subscriber', subscribersCount)} {contentsCount || 'No'} {pluralize('video', contentsCount)}
+            <Typography sx={{display: 'flex', flexWrap: 'wrap', columnGap: 1}}>
+              <span><strong>@{channel.username}</strong> </span>
+              <span>{subscribersCount || 'No'} {pluralize('subscriber', subscribersCount)}</span>
+              <span>{contentsCount || 'No'} {pluralize('video', contentsCount)}</span>
             </Typography>
           </Box>
         </Box>
@@ -92,7 +97,7 @@ export default function Channel() {
         />
       </Box>
 
-      <ChannelContentCards channelId={channel.id}/>
+      <ChannelContentCards channel={channel}/>
     </Box>
   )
 }

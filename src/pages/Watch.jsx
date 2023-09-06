@@ -79,7 +79,7 @@ export default function Watch() {
 
   return content && channel && (
     <Grid container columnSpacing={2} rowSpacing={3}>
-      <Grid md={12} lg={8} sx={{display: 'flex', flexDirection: 'column', rowGap: 2}}>
+      <Grid xs={12} sm={8} sx={{display: 'flex', flexDirection: 'column', rowGap: 2}}>
         <video
           title={content.title}
           controls
@@ -95,7 +95,7 @@ export default function Watch() {
         </Typography>
 
         <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-          <Box sx={{display: 'flex', alignItems: 'center', columnGap: 2}}>
+          <Box sx={{display: 'flex', flexWrap: 'wrap', alignItems: 'center', columnGap: 2, rowGap: 2}}>
             <ChannelLink username={channel.username}>
               <Avatar alt={channel.name} src={channel.profileUrl}/>
             </ChannelLink>
@@ -162,7 +162,7 @@ export default function Watch() {
         </Box>
       </Grid>
 
-      <Grid md={12} lg={4} sx={{display: 'flex', flexDirection: 'column', rowGap: 2}}>
+      <Grid xs={12} sm={4} sx={{display: 'flex', flexDirection: 'column', rowGap: 2}}>
         {content.relatedContents?.map(content => (
           <RelatedContentCard key={content.id} content={content}/>
         ))}

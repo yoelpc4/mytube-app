@@ -22,7 +22,7 @@ export default function useChannel(initialChannel = null) {
 
   return {
     channel,
-    hasSubscribed: channel?.channelSubscriptions[0]?.subscriberId === user?.id,
+    hasSubscribed: user && channel?.channelSubscriptions[0]?.subscriberId === user.id,
     subscribersCount: formatCount(channel?.channelSubscriptionsCount),
     contentsCount: formatCount(channel?.contentsCount),
     setChannel,

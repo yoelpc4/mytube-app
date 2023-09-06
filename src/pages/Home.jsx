@@ -32,12 +32,11 @@ export default function Home() {
         flexDirection: 'column',
         alignItems: 'center',
         height: '90vh',
-        overflowY: 'scroll',
       }}
     >
       <Grid container spacing={2} maxWidth="xl">
         {contents.map(content => (
-          <Grid key={content.id} sm={12} md={6} lg={4} xl={3}>
+          <Grid key={content.id} xs={12} sm={6} md={4} lg={3}>
             <FeedContentCard content={content}/>
           </Grid>
         ))}
