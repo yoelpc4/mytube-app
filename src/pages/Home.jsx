@@ -34,7 +34,7 @@ export default function Home() {
         height: '90vh',
       }}
     >
-      <Grid container spacing={2} maxWidth="xl">
+      <Grid container rowSpacing={2} maxWidth="xl">
         {contents.map(content => (
           <Grid key={content.id} xs={12} sm={6} md={4} lg={3}>
             <FeedContentCard content={content}/>

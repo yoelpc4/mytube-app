@@ -10,7 +10,7 @@ function RelatedContentCard({content}) {
   const {createdAt, viewsCount} = useContent(content)
 
   return (
-    <Grid container columnSpacing={2} rowSpacing={0} sx={{p: 0}}>
+    <Grid container rowSpacing={0} sx={{p: 0}}>
       <Grid md={12} lg={6}>
         <ContentLink content={content}>
           <video

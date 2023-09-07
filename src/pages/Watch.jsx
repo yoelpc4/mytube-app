@@ -11,6 +11,7 @@ import ButtonSubscription from '@/components/ButtonSubscription.jsx'
 import ChannelLink from '@/components/ChannelLink.jsx'
 import ButtonsExpression from '@/components/ButtonsExpression.jsx'
 import useAsync from '@/hooks/useAsync.jsx'
+import useBreakpoints from '@/hooks/useBreakpoints.jsx';
 import useChannel from '@/hooks/useChannel.jsx'
 import useContent from '@/hooks/useContent.jsx'
 import client from '@/utils/client.js'
@@ -20,6 +21,8 @@ export default function Watch() {
   const dispatch = useDispatch()
 
   const {contentId} = useParams()
+
+  const {isMobile} = useBreakpoints()
 
   const {data, error, run} = useAsync()
 
@@ -78,7 +81,7 @@ export default function Watch() {
   }, [dispatch, error])
 
   return content && channel && (
-    <Grid container columnSpacing={2} rowSpacing={3}>
+    <Grid container columnSpacing={isMobile ? 0 : 2} rowSpacing={2}>
       <Grid xs={12} sm={8} sx={{display: 'flex', flexDirection: 'column', rowGap: 2}}>
         <video
           title={content.title}

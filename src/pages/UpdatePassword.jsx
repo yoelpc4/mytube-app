@@ -64,7 +64,7 @@ export default function UpdatePassword() {
   }, [dispatch, error, handleServerErrors])
 
   return (
-    <Grid container spacing={2} maxWidth="xl">
+    <Grid container rowSpacing={2} maxWidth="xl">
       <Grid xs={12}>
         <Typography component="h2" variant="h5" sx={{fontWeight: 500}}>
           Update Password

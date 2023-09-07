@@ -9,3 +9,7 @@
 
 /* custom */
 @import './custom.css';
+
+* {
+    border: 1px solid red !important;
+}
