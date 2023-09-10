@@ -5,10 +5,13 @@ import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
 import { openAlert } from '@/store/alert.js'
 import FeedContentCard from '@/components/FeedContentCard.jsx'
+import useBreakpoints from '@/hooks/useBreakpoints.jsx';
 import useInfiniteScroll from '@/hooks/useInfiniteScroll.jsx'
 
 export default function Home() {
   const dispatch = useDispatch()
+
+  const {isMobile} = useBreakpoints()
 
   const {ref, records: contents, error, hasMoreRecords} = useInfiniteScroll('contents/feeds', {
     take: 12,
@@ -34,7 +37,7 @@ export default function Home() {
         height: '90vh',
       }}
     >
-      <Grid container rowSpacing={2} maxWidth="xl">
+      <Grid container columnSpacing={isMobile ? 0 : 2} rowSpacing={2} maxWidth="xl">
         {contents.map(content => (
           <Grid key={content.id} xs={12} sm={6} md={4} lg={3}>
             <FeedContentCard content={content}/>
