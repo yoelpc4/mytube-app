@@ -1,75 +1,74 @@
-import { createBrowserRouter } from 'react-router-dom'
+import { lazy, Suspense } from 'react';
+import { createBrowserRouter } from 'react-router-dom';
 import App from '@/App.jsx'
-import Auth from '@/middlewares/Auth.jsx'
-import Primary from '@/layouts/Primary.jsx'
-import Secondary from '@/layouts/Secondary.jsx'
-import Channel from '@/pages/Channel.jsx'
-import Watch from '@/pages/Watch.jsx'
-import History from '@/pages/History.jsx'
-import Login from '@/pages/Login.jsx'
-import Home from '@/pages/Home.jsx'
-import Register from '@/pages/Register.jsx'
-import UpdatePassword from '@/pages/UpdatePassword.jsx'
-import ForgotPassword from '@/pages/ForgotPassword.jsx';
-import ResetPassword from '@/pages/ResetPassword.jsx';
-import NotFound from '@/pages/NotFound.jsx';
+import LoadingIndicator from '@/components/LoadingIndicator.jsx';
+
+const lazyLoad = factory => {
+  const LazyExoticComponent = lazy(factory)
+
+  return (
+    <Suspense fallback={<LoadingIndicator />}>
+      <LazyExoticComponent/>
+    </Suspense>
+  )
+}
 
 const router = createBrowserRouter([
   {
-    element: <App/>,
+    element: <App />,
     children: [
       {
-        element: <Secondary/>,
+        element: lazyLoad(() => import('@/layouts/Secondary.jsx')),
         children: [
           {
             path: '/register',
-            element: <Register/>,
+            element: lazyLoad(() => import('@/pages/Register.jsx')),
           },
           {
             path: '/login',
-            element: <Login/>,
+            element: lazyLoad(() => import('@/pages/Login.jsx')),
           },
           {
             path: '/forgot-password',
-            element: <ForgotPassword/>,
+            element: lazyLoad(() => import('@/pages/ForgotPassword.jsx')),
           },
           {
             path: '/reset-password',
-            element: <ResetPassword/>,
+            element: lazyLoad(() => import('@/pages/ResetPassword.jsx')),
           },
         ],
       },
       {
-        element: <Primary/>,
+        element: lazyLoad(() => import('@/layouts/Primary.jsx')),
         children: [
           {
-            element: <Auth/>,
+            element: lazyLoad(() => import('@/middlewares/Auth.jsx')),
             children: [
               {
                 path: '/history',
-                element: <History/>,
+                element: lazyLoad(() => import('@/pages/History.jsx')),
               },
               {
                 path: 'update-password',
-                element: <UpdatePassword/>,
+                element: lazyLoad(() => import('@/pages/UpdatePassword.jsx')),
               },
             ],
           },
           {
             index: true,
-            element: <Home/>,
+            element: lazyLoad(() => import('@/pages/Home.jsx')),
           },
           {
             path: '/watch/:contentId',
-            element: <Watch/>,
+            element: lazyLoad(() => import('@/pages/Watch.jsx')),
           },
           {
             path: '/channel/:username',
-            element: <Channel/>,
+            element: lazyLoad(() => import('@/pages/Channel.jsx')),
           },
           {
             path: '*',
-            element: <NotFound/>,
+            element: lazyLoad(() => import('@/pages/NotFound.jsx')),
           },
         ],
       },
