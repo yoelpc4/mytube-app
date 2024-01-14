@@ -9,8 +9,8 @@ const client = axios.create({
         Accept: 'application/json',
     },
     withCredentials: true,
-    xsrfCookieName: null,
-    xsrfHeaderName: null,
+    xsrfCookieName: undefined,
+    xsrfHeaderName: undefined,
 })
 
 const fulfillRequest = config => {
@@ -40,7 +40,9 @@ const rejectResponse = async error => {
 
     const {config, response} = error
 
-    if (response && (!config.retry || config.retry < 2)) {
+    const isRetryable = config && (!config.retry || config.retry < 2)
+
+    if (response && isRetryable) {
         config.retry = (config.retry ?? 0) + 1
 
         if (response.status === 401) {
