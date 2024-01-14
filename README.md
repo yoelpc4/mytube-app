@@ -1,4 +1,4 @@
-# MyTube APP
+# MyTube App
 
 MyTube App (YouTube clone)
 
